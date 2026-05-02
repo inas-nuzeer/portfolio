@@ -78,7 +78,7 @@ class _MainContentState extends State<MainContent> {
                       right: isMobileScreen ? 0 : screenWidth * .28,
                       left: isMobileScreen ? 0 : screenWidth * .28,
                       // right: 0,
-                      child: Center(child: NavBar()),
+                      child: Center(child: NavBar(isMobile: isMobileScreen)),
                     ),
                   ],
                 ),

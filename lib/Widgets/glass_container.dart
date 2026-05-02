@@ -19,7 +19,7 @@ class GlassContainer extends StatelessWidget {
     this.child = const SizedBox(),
     this.width = 0,
     this.height = 50,
-    this.borderRadius = 10,
+    this.borderRadius = 0,
     this.blurStrength = 20,
     this.color = Colors.white,
     this.opacity = 0.1,

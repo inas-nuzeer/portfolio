@@ -45,14 +45,20 @@ class _NavBarState extends State<NavBar> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, size: 15, color: Colors.brown[900]),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Icon(icon, size: 15, color: Colors.brown[900]),
+          ),
           const SizedBox(width: 5),
-          Text(
-            text,
-            style: TextStyle(
-              color: Colors.brown[900],
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.brown[900],
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
             ),
           ),
         ],

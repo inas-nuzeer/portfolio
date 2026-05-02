@@ -16,103 +16,106 @@ class _HomeState extends State<Home> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobileScreen = constraints.maxWidth < 600;
-        return SizedBox(
-          height: screenHeight,
-          child: Stack(
-            children: [
-              SizedBox(height: screenHeight * .04),
-              SizedBox(
-                width: screenWidth,
-                // height: screenHeight,
-                // color: Colors.white.withOpacity(.5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        'Mobile App Developer | Flutter Developer',
-                        style: TextStyle(
-                          color: Color(0xFFfeb800),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        'Inas Nuzeer',
-                        style: Theme.of(context).textTheme.displayLarge,
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * .04),
-                    if (isMobileScreen) ...[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _personalData1(),
-                          const SizedBox(height: 30),
-                          _personalData2(),
-                        ],
-                      ),
-                    ] else ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          _personalData1(),
-                          const SizedBox(width: 30),
-                          _personalData2(),
-                        ],
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              Positioned(
-                top: screenHeight * .03,
-                left: 0,
-                right: 0,
-                child: SizedBox(
-                  height: 50,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobileScreen = constraints.maxWidth < 600;
+          return SizedBox(
+            height: screenHeight,
+            child: Stack(
+              children: [
+                SizedBox(height: screenHeight * .04),
+                SizedBox(
+                  width: screenWidth,
+                  // height: screenHeight,
+                  // color: Colors.white.withOpacity(.5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Center(
-                            child: Icon(
-                              Icons.add,
-                              size: 18,
-                              color: Colors.green,
-                            ),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Mobile App Developer | Flutter Developer',
+                          style: TextStyle(
+                            color: Color(0xFFfeb800),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
                           ),
-                          const SizedBox(width: 5),
-                          Text(
-                            'Open to Work',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ],
+                          textAlign: TextAlign.center,
+                        ),
                       ),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Inas Nuzeer',
+                          style: Theme.of(context).textTheme.displayLarge,
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * .04),
+                      if (isMobileScreen) ...[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _personalData1(),
+                            const SizedBox(height: 30),
+                            _personalData2(),
+                          ],
+                        ),
+                      ] else ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            _personalData1(),
+                            const SizedBox(width: 30),
+                            _personalData2(),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+                Positioned(
+                  top: screenHeight * .03,
+                  left: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: 50,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Center(
+                              child: Icon(
+                                Icons.add,
+                                size: 18,
+                                color: Colors.green,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              'Open to Work',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 

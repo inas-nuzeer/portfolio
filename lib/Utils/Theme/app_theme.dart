@@ -58,9 +58,9 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         textStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
-        backgroundColor: _secondaryColor,
+        backgroundColor: _backgroundColor,
         foregroundColor: Colors.black,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       ),
     ),
   );

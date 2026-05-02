@@ -17,7 +17,7 @@ class About extends StatelessWidget {
           children: [
             SizedBox(height: screenHeight * .04),
             Text(
-              'About Me',
+              'Summery',
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.start,
             ),

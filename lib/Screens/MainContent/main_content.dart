@@ -25,7 +25,7 @@ class _MainContentState extends State<MainContent> {
       body: DecoratedBox(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/bg_image2.PNG'),
+            image: AssetImage('images/bg_image2.png'),
             fit: BoxFit.cover,
           ),
         ),

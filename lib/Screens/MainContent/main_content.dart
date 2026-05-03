@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inas_portfolio/Screens/About/about.dart';
+import 'package:inas_portfolio/Screens/Experience/experience.dart';
 import 'package:inas_portfolio/Screens/Home/home.dart';
 import 'package:inas_portfolio/Screens/Projects/project.dart';
 import 'package:inas_portfolio/Screens/Skills/skills.dart';
@@ -51,10 +52,20 @@ class _MainContentState extends State<MainContent> {
                             child: Column(
                               children: [
                                 _constrainedBox(Home(), screenHeight),
-                                _constrainedBox(About(), screenHeight),
-                                _constrainedBox(Project(), screenHeight),
-                                _constrainedBox(Skill(), screenHeight),
-                                _constrainedBox(Project(), screenHeight),
+                                GlassContainer(
+                                  width: screenWidth,
+                                  child: Column(
+                                    children: [
+                                      _constrainedBox(About(), screenHeight),
+                                      _constrainedBox(Project(), screenHeight),
+                                      _constrainedBox(Skill(), screenHeight),
+                                      _constrainedBox(
+                                        Experience(),
+                                        screenHeight,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 // Add more content here to make it scrollable
                                 // const SizedBox(height: 500), // Extra content for demo
                               ],
@@ -73,15 +84,13 @@ class _MainContentState extends State<MainContent> {
                       ),
                     ),
                     // Navbar at bottom
-                    if (!isMobileScreen) ...[
-                      Positioned(
-                        bottom: isMobileScreen ? 0 : screenHeight * .04,
-                        right: isMobileScreen ? 0 : screenWidth * .28,
-                        left: isMobileScreen ? 0 : screenWidth * .28,
-                        // right: 0,
-                        child: Center(child: NavBar(isMobile: isMobileScreen)),
-                      ),
-                    ],
+                    Positioned(
+                      bottom: isMobileScreen ? 0 : screenHeight * .04,
+                      right: isMobileScreen ? 0 : screenWidth * .28,
+                      left: isMobileScreen ? 0 : screenWidth * .28,
+                      // right: 0,
+                      child: Center(child: NavBar(isMobile: isMobileScreen)),
+                    ),
                   ],
                 ),
               ),
@@ -89,9 +98,10 @@ class _MainContentState extends State<MainContent> {
           },
         ),
       ),
-      // bottomNavigationBar: SizedBox(
+
+      // bottomNavigationBar: Container(
       //   // padding: EdgeInsets.all(25),
-      //   height: 150,
+      //   height: 45,
       //   child: NavBar(isMobile: true),
       // ),
     );

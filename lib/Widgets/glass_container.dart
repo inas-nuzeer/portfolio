@@ -13,6 +13,7 @@ class GlassContainer extends StatelessWidget {
   final Color color;
   final double opacity;
   final double paddingValue;
+  final bool isMobileScreen;
 
   const GlassContainer({
     super.key,
@@ -24,6 +25,7 @@ class GlassContainer extends StatelessWidget {
     this.color = Colors.white,
     this.opacity = 0.1,
     this.paddingValue = 0,
+    this.isMobileScreen = false,
   });
 
   @override
@@ -31,8 +33,10 @@ class GlassContainer extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: paddingValue),
-        width: width,
+        padding: EdgeInsets.symmetric(
+          vertical: isMobileScreen ? 10 : paddingValue,
+        ),
+        width: isMobileScreen ? 60 : width,
         // height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius),

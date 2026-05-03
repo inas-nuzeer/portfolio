@@ -91,8 +91,8 @@ class _HomeState extends State<Home> {
                           children: [
                             Center(
                               child: Icon(
-                                Icons.add,
-                                size: 18,
+                                Icons.brightness_1,
+                                size: 13,
                                 color: Colors.green,
                               ),
                             ),
@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                                fontSize: 20,
                               ),
                             ),
                           ],

@@ -5,6 +5,30 @@ class Project extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobileScreen = constraints.maxWidth < 600;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: screenHeight * .04),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Projects',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }

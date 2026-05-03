@@ -30,10 +30,12 @@ class _MainContentState extends State<MainContent> {
             fit: BoxFit.cover,
           ),
         ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isMobileScreen = constraints.maxWidth < 600;
-            return SafeArea(
+        child:
+            //  LayoutBuilder(
+            //   builder: (context, constraints) {
+            //     final isMobileScreen = constraints.maxWidth < 600;
+            //     return
+            SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * .0,
@@ -83,20 +85,27 @@ class _MainContentState extends State<MainContent> {
                         child: _buildDownloadButton(),
                       ),
                     ),
-                    // Navbar at bottom
                     Positioned(
-                      bottom: isMobileScreen ? 0 : screenHeight * .04,
-                      right: isMobileScreen ? 0 : screenWidth * .28,
-                      left: isMobileScreen ? 0 : screenWidth * .28,
+                      bottom: screenHeight * .04,
+                      right: screenWidth * .28,
+                      left: screenWidth * .28,
                       // right: 0,
-                      child: Center(child: NavBar(isMobile: isMobileScreen)),
+                      child: Center(child: NavBar()),
                     ),
+                    // Navbar at bottom
+                    // Positioned(
+                    //   bottom: isMobileScreen ? 0 : screenHeight * .04,
+                    //   right: isMobileScreen ? 0 : screenWidth * .28,
+                    //   left: isMobileScreen ? 0 : screenWidth * .28,
+                    //   // right: 0,
+                    //   child: Center(child: NavBar()),
+                    // ),
                   ],
                 ),
               ),
-            );
-          },
-        ),
+              //   );
+              // },
+            ),
       ),
 
       // bottomNavigationBar: Container(

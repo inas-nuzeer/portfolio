@@ -19,7 +19,7 @@ class About extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              'About Me',
+              'About Mee',
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.start,
             ),

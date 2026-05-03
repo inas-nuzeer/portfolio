@@ -20,6 +20,7 @@ class _NavBarState extends State<NavBar> {
       borderRadius: widget.isMobile ? 0 : 100,
       blurStrength: 12,
       paddingValue: widget.isMobile ? 0 : 10,
+      isMobileScreen: widget.isMobile,
 
       child: Center(
         child: Row(

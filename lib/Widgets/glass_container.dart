@@ -34,9 +34,9 @@ class GlassContainer extends StatelessWidget {
       borderRadius: BorderRadius.circular(borderRadius),
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: isMobileScreen ? 10 : paddingValue,
+          vertical: isMobileScreen ? 15 : paddingValue,
         ),
-        width: isMobileScreen ? 60 : width,
+        width: isMobileScreen ? double.infinity : width,
         // height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius),

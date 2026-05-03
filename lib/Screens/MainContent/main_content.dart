@@ -89,12 +89,11 @@ class _MainContentState extends State<MainContent> {
           },
         ),
       ),
-
-      bottomNavigationBar: SizedBox(
-        // padding: EdgeInsets.all(25),
-        height: 45,
-        child: NavBar(isMobile: true),
-      ),
+      // bottomNavigationBar: SizedBox(
+      //   // padding: EdgeInsets.all(25),
+      //   height: 150,
+      //   child: NavBar(isMobile: true),
+      // ),
     );
   }
 

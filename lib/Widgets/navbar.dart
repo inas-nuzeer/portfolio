@@ -16,7 +16,7 @@ class _NavBarState extends State<NavBar> {
     // final double screenHeight = MediaQuery.of(context).size.height;
     return GlassContainer(
       width: widget.isMobile ? screenWidth : screenWidth * .5,
-      height: 25,
+      height: widget.isMobile ? 150 : 25,
       borderRadius: widget.isMobile ? 0 : 100,
       blurStrength: 12,
       paddingValue: widget.isMobile ? 0 : 10,

@@ -31,8 +31,8 @@ class GlassContainer extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: Container(
-        padding: EdgeInsets.all(paddingValue),
-        // width: width,
+        padding: EdgeInsets.symmetric(vertical: paddingValue),
+        width: width,
         // height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius),

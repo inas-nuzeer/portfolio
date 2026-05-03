@@ -19,10 +19,9 @@ class _NavBarState extends State<NavBar> {
       height: 25,
       borderRadius: widget.isMobile ? 0 : 100,
       blurStrength: 12,
-      paddingValue: 10,
+      paddingValue: widget.isMobile ? 0 : 10,
 
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      child: Center(
         child: Row(
           mainAxisAlignment: widget.isMobile
               ? MainAxisAlignment.spaceEvenly

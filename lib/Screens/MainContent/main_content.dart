@@ -73,19 +73,27 @@ class _MainContentState extends State<MainContent> {
                       ),
                     ),
                     // Navbar at bottom
-                    Positioned(
-                      bottom: isMobileScreen ? 0 : screenHeight * .04,
-                      right: isMobileScreen ? 0 : screenWidth * .28,
-                      left: isMobileScreen ? 0 : screenWidth * .28,
-                      // right: 0,
-                      child: Center(child: NavBar(isMobile: isMobileScreen)),
-                    ),
+                    if (!isMobileScreen) ...[
+                      Positioned(
+                        bottom: isMobileScreen ? 0 : screenHeight * .04,
+                        right: isMobileScreen ? 0 : screenWidth * .28,
+                        left: isMobileScreen ? 0 : screenWidth * .28,
+                        // right: 0,
+                        child: Center(child: NavBar(isMobile: isMobileScreen)),
+                      ),
+                    ],
                   ],
                 ),
               ),
             );
           },
         ),
+      ),
+
+      bottomNavigationBar: SizedBox(
+        // padding: EdgeInsets.all(25),
+        height: 45,
+        child: NavBar(isMobile: true),
       ),
     );
   }

@@ -34,25 +34,19 @@ class _HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          'Mobile App Developer | Flutter Developer',
-                          style: TextStyle(
-                            color: Color(0xFFfeb800),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                          ),
-                          textAlign: TextAlign.center,
+                      Text(
+                        'Mobile App Developer | Flutter Developer',
+                        style: TextStyle(
+                          color: Color(0xFFfeb800),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          'Inas Nuzeer',
-                          style: Theme.of(context).textTheme.displayLarge,
-                          textAlign: TextAlign.start,
-                        ),
+                      Text(
+                        'Inas Nuzeer',
+                        style: Theme.of(context).textTheme.displayLarge,
+                        textAlign: TextAlign.start,
                       ),
                       SizedBox(height: screenHeight * .04),
                       if (isMobileScreen) ...[
@@ -151,19 +145,14 @@ class _HomeState extends State<Home> {
                   color: Color(0xFFfeb800),
                 ),
                 const SizedBox(width: 8),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'linkedin.com/inas-nuzeer',
-                    style: TextStyle(
-                      color: _isHoveringOnLink
-                          ? Color(0xFFfeb800)
-                          : Colors.white,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 20,
-                    ),
-                    textAlign: TextAlign.center,
+                Text(
+                  'linkedin.com/inas-nuzeer',
+                  style: TextStyle(
+                    color: _isHoveringOnLink ? Color(0xFFfeb800) : Colors.white,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 20,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -189,17 +178,14 @@ class _HomeState extends State<Home> {
       children: [
         Icon(icon, size: 20, color: Color(0xFFfeb800)),
         const SizedBox(width: 8),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            text,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.normal,
-              fontSize: 20,
-            ),
-            textAlign: TextAlign.center,
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.normal,
+            fontSize: 20,
           ),
+          textAlign: TextAlign.center,
         ),
       ],
     );

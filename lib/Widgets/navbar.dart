@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:inas_portfolio/Widgets/glass_container.dart';
 
 class NavBar extends StatefulWidget {
-  final bool isMobile;
-  const NavBar({super.key, this.isMobile = false});
+  // final bool isMobile;
+  const NavBar({
+    super.key,
+    //  this.isMobile = false
+  });
 
   @override
   State<NavBar> createState() => _NavBarState();
@@ -13,30 +16,32 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isMobileScreen = screenWidth < 600;
+
     // final double screenHeight = MediaQuery.of(context).size.height;
     return GlassContainer(
-      width: widget.isMobile ? screenWidth : screenWidth * .5,
-      height: widget.isMobile ? 150 : 25,
-      borderRadius: widget.isMobile ? 0 : 100,
+      width: isMobileScreen ? screenWidth : screenWidth * .5,
+      height: isMobileScreen ? 150 : 25,
+      borderRadius: isMobileScreen ? 0 : 100,
       blurStrength: 12,
-      paddingValue: widget.isMobile ? 0 : 10,
-      isMobileScreen: widget.isMobile,
+      paddingValue: isMobileScreen ? 0 : 10,
+      isMobileScreen: isMobileScreen,
 
       child: Center(
         child: Row(
-          mainAxisAlignment: widget.isMobile
+          mainAxisAlignment: isMobileScreen
               ? MainAxisAlignment.spaceEvenly
               : MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _navItem(Icons.home, 'Home', () {}),
-            if (!widget.isMobile) const SizedBox(width: 10),
+            if (!isMobileScreen) const SizedBox(width: 10),
             _navItem(Icons.thunderstorm, 'About', () {}),
-            if (!widget.isMobile) const SizedBox(width: 10),
+            if (!isMobileScreen) const SizedBox(width: 10),
             _navItem(Icons.sms_failed, 'Skills', () {}),
-            if (!widget.isMobile) const SizedBox(width: 10),
+            if (!isMobileScreen) const SizedBox(width: 10),
             _navItem(Icons.explore, 'Experience', () {}),
-            if (!widget.isMobile) const SizedBox(width: 10),
+            if (!isMobileScreen) const SizedBox(width: 10),
             _navItem(Icons.connect_without_contact, 'Referals', () {}),
           ],
         ),

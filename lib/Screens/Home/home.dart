@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
-    // final bool isMobileScreen = screenWidth < 600;
+    final bool isMobileScreen = screenWidth < 600;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),
       child: SizedBox(
@@ -46,6 +46,7 @@ class _HomeState extends State<Home> {
                   ),
                   FittedBox(
                     fit: BoxFit.scaleDown,
+
                     child: Text(
                       'Inas Nuzeer',
                       style: Theme.of(context).textTheme.displayLarge,
@@ -53,25 +54,25 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   SizedBox(height: screenHeight * .04),
-                  // if (isMobileScreen) ...[
-                  //   Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       _personalData1(),
-                  //       const SizedBox(height: 30),
-                  //       _personalData2(),
-                  //     ],
-                  //   ),
-                  // ] else ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _personalData1(),
-                      const SizedBox(width: 30),
-                      _personalData2(),
-                    ],
-                  ),
-                  // ],
+                  if (isMobileScreen) ...[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _personalData1(),
+                        const SizedBox(height: 30),
+                        _personalData2(),
+                      ],
+                    ),
+                  ] else ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        _personalData1(),
+                        const SizedBox(width: 30),
+                        _personalData2(),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),

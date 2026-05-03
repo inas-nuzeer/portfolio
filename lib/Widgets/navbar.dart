@@ -19,31 +19,34 @@ class _NavBarState extends State<NavBar> {
     final bool isMobileScreen = screenWidth < 600;
 
     // final double screenHeight = MediaQuery.of(context).size.height;
-    return GlassContainer(
-      width: isMobileScreen ? screenWidth : screenWidth * .5,
-      height: isMobileScreen ? 150 : 25,
-      borderRadius: isMobileScreen ? 0 : 100,
-      blurStrength: 12,
-      paddingValue: isMobileScreen ? 0 : 10,
-      isMobileScreen: isMobileScreen,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: GlassContainer(
+        width: isMobileScreen ? screenWidth : screenWidth * .5,
+        height: isMobileScreen ? 150 : 25,
+        borderRadius: isMobileScreen ? 0 : 100,
+        blurStrength: 12,
+        paddingValue: isMobileScreen ? 0 : 10,
+        isMobileScreen: isMobileScreen,
 
-      child: Center(
-        child: Row(
-          mainAxisAlignment: isMobileScreen
-              ? MainAxisAlignment.spaceEvenly
-              : MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _navItem(Icons.home, 'Home', () {}),
-            if (!isMobileScreen) const SizedBox(width: 10),
-            _navItem(Icons.thunderstorm, 'About', () {}),
-            if (!isMobileScreen) const SizedBox(width: 10),
-            _navItem(Icons.sms_failed, 'Skills', () {}),
-            if (!isMobileScreen) const SizedBox(width: 10),
-            _navItem(Icons.explore, 'Experience', () {}),
-            if (!isMobileScreen) const SizedBox(width: 10),
-            _navItem(Icons.connect_without_contact, 'Referals', () {}),
-          ],
+        child: Center(
+          child: Row(
+            mainAxisAlignment: isMobileScreen
+                ? MainAxisAlignment.spaceEvenly
+                : MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _navItem(Icons.home, 'Home', () {}),
+              if (!isMobileScreen) const SizedBox(width: 10),
+              _navItem(Icons.thunderstorm, 'About', () {}),
+              if (!isMobileScreen) const SizedBox(width: 10),
+              _navItem(Icons.sms_failed, 'Skills', () {}),
+              if (!isMobileScreen) const SizedBox(width: 10),
+              _navItem(Icons.explore, 'Experience', () {}),
+              if (!isMobileScreen) const SizedBox(width: 10),
+              _navItem(Icons.connect_without_contact, 'Referals', () {}),
+            ],
+          ),
         ),
       ),
     );
@@ -56,20 +59,15 @@ class _NavBarState extends State<NavBar> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Icon(icon, size: 15, color: Colors.brown[900]),
-          ),
+          Icon(icon, size: 15, color: Colors.white),
           const SizedBox(width: 5),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Colors.brown[900],
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
+          Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              // color: Colors.brown[900],
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
             ),
           ),
         ],

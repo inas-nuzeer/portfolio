@@ -1,90 +1,132 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:inas_portfolio/Utils/Theme/app_theme.dart';
 import 'package:inas_portfolio/Widgets/glass_container.dart';
 
-class NavBar extends StatefulWidget {
+class NavBar extends StatelessWidget {
   final Function(int) scrollToSection;
-  NavBar({super.key, required this.scrollToSection});
+  final int activeIndex;
 
-  @override
-  State<NavBar> createState() => _NavBarState();
-}
+  const NavBar({
+    super.key,
+    required this.scrollToSection,
+    this.activeIndex = 0,
+  });
 
-class _NavBarState extends State<NavBar> {
-  late bool isSelected;
+  static const List<_NavItem> _items = [
+    _NavItem(icon: Icons.home_rounded, label: 'Home'),
+    _NavItem(icon: Icons.person_rounded, label: 'About'),
+    _NavItem(icon: Icons.bolt_rounded, label: 'Skills'),
+    _NavItem(icon: Icons.work_rounded, label: 'Projects'),
+    _NavItem(icon: Icons.timeline_rounded, label: 'Experience'),
+  ];
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final bool isMobileScreen = screenWidth < 600;
 
-    // final double screenHeight = MediaQuery.of(context).size.height;
     return GlassContainer(
-      width: isMobileScreen ? screenWidth : screenWidth * .5,
-      height: isMobileScreen ? 150 : 25,
-      borderRadius: isMobileScreen ? 0 : 100,
+      width: screenWidth * .5,
+      height: 60,
+      borderRadius: 100,
       blurStrength: 12,
-      paddingValue: isMobileScreen ? 0 : 10,
-      isMobileScreen: isMobileScreen,
-
+      paddingValue: 10,
       child: Center(
         child: Row(
-          mainAxisAlignment: isMobileScreen
-              ? MainAxisAlignment.spaceEvenly
-              : MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _navItem(Icons.home, 'Home', () => widget.scrollToSection(0)),
-            if (!isMobileScreen) const SizedBox(width: 10),
-            _navItem(
-              Icons.thunderstorm,
-              'About',
-              () => widget.scrollToSection(1),
-            ),
-            if (!isMobileScreen) const SizedBox(width: 10),
-            _navItem(
-              Icons.sms_failed,
-              'Skills',
-              () => widget.scrollToSection(2),
-            ),
-            if (!isMobileScreen) const SizedBox(width: 10),
-            _navItem(
-              Icons.connect_without_contact,
-              'Projects',
-              () => widget.scrollToSection(3),
-            ),
-            if (!isMobileScreen) const SizedBox(width: 10),
-            _navItem(
-              Icons.explore,
-              'Experience',
-              () => widget.scrollToSection(4),
-            ),
-          ],
+          children: List.generate(_items.length, (index) {
+            final bool isLast = index == _items.length - 1;
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _NavButton(
+                  item: _items[index],
+                  isActive: activeIndex == index,
+                  onTap: () => scrollToSection(index),
+                ),
+                if (!isLast) const SizedBox(width: 4),
+              ],
+            );
+          }),
         ),
       ),
     );
   }
+}
 
-  Widget _navItem(IconData icon, String text, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(icon, size: 15, color: AppTheme.lightTheme.primaryColor),
-          const SizedBox(width: 5),
-          Text(
-            text,
-            style: TextStyle(
-              color: AppTheme.lightTheme.primaryColor,
-              // color: Colors.brown[900],
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
+class _NavButton extends StatelessWidget {
+  final _NavItem item;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _NavButton({
+    required this.item,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Color activeColor = AppTheme.lightTheme.colorScheme.primary;
+    const Color inactiveColor = Colors.white54;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive
+                ? activeColor.withOpacity(0.15)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(100),
           ),
-        ],
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Active dot indicator
+              // AnimatedContainer(
+              //   duration: const Duration(milliseconds: 250),
+              //   width: isActive ? 4 : 0,
+              //   height: isActive ? 4 : 0,
+              //   margin: const EdgeInsets.only(bottom: 3),
+              //   decoration: BoxDecoration(
+              //     color: activeColor,
+              //     shape: BoxShape.circle,
+              //   ),
+              // ),
+              Icon(
+                item.icon,
+                size: 18,
+                color: isActive ? activeColor : inactiveColor,
+              ),
+              const SizedBox(width: 2),
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 250),
+                style: TextStyle(
+                  fontSize: isActive ? 15 : 14,
+                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+                  color: isActive ? activeColor : inactiveColor,
+                  letterSpacing: 0.3,
+                ),
+                child: Text(item.label),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
+}
+
+class _NavItem {
+  final IconData icon;
+  final String label;
+  const _NavItem({required this.icon, required this.label});
 }

@@ -24,16 +24,49 @@ class _HomeState extends State<Home> {
         child: Stack(
           children: [
             SizedBox(height: screenHeight * .04),
-            SizedBox(
-              width: screenWidth,
+            ConstrainedBox(
+              constraints: BoxConstraints(minHeight: screenHeight),
               // height: screenHeight,
               // color: Colors.white.withOpacity(.5),
               child: Column(
                 mainAxisAlignment: isMobileScreen
                     ? MainAxisAlignment.end
                     : MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: isMobileScreen
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.start,
                 children: [
+                  // isMobileScreen
+                  //     ? Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: [
+                  //           SizedBox(height: screenHeight * .15),
+                  //           ClipRRect(
+                  //             borderRadius: BorderRadius.circular(100),
+                  //             child: Container(
+                  //               width: 200,
+                  //               height: 200,
+                  //               decoration: BoxDecoration(
+                  //                 borderRadius: BorderRadius.circular(150),
+                  //               ),
+                  //               // borderRadius: 150,
+                  //               child: Center(
+                  //                 child: Image(
+                  //                   image: const AssetImage(
+                  //                     'assets/images/hero_Og_1.png',
+                  //                   ),
+                  //                   fit: BoxFit
+                  //                       .cover, // ← This ensures image covers the circle
+                  //                   width: 200,
+                  //                   height: 200,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           SizedBox(height: screenHeight * .05),
+                  //         ],
+                  //       )
+                  //     : SizedBox.shrink(),
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
@@ -70,15 +103,25 @@ class _HomeState extends State<Home> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        _personalData1(false),
+                        Expanded(flex: 1, child: _personalData1(false)),
                         const SizedBox(width: 30),
-                        _personalData2(false),
+                        Expanded(flex: 3, child: _personalData2(false)),
                       ],
                     ),
                   ],
                 ],
               ),
             ),
+            // if (isMobileScreen) ...[
+            //   Positioned(
+            //     bottom: 0,
+            //     left: 0,
+            //     right: 0,
+            //     child: Image(
+            //       image: AssetImage('assets/images/black_layer.png'),
+            //     ),
+            //   ),
+            // ],
             Positioned(
               top: screenHeight * .03,
               left: 0,
@@ -184,14 +227,16 @@ class _HomeState extends State<Home> {
       children: [
         Icon(icon, size: 20, color: Color(0xFFfeb800)),
         const SizedBox(width: 8),
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.normal,
-            fontSize: 20,
+        Flexible(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+              fontSize: 20,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     );

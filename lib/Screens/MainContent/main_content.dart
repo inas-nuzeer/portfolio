@@ -22,6 +22,7 @@ class _MainContentState extends State<MainContent> {
 
   bool _isHovering = false;
   bool _isLoading = false;
+  int _activeIndex = 0;
 
   @override
   void initState() {
@@ -33,10 +34,28 @@ class _MainContentState extends State<MainContent> {
       (_) => const Project(),
       (_) => const Experience(),
     ];
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final double offset = _scrollController.offset;
+    final double sectionHeight = _scrollController.position.viewportDimension;
+
+    // Which section occupies the majority of the viewport right now
+    final int index = (offset / sectionHeight).round().clamp(
+      0,
+      _sections.length - 1,
+    );
+
+    if (index != _activeIndex) {
+      setState(() => _activeIndex = index);
+    }
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
@@ -69,6 +88,7 @@ class _MainContentState extends State<MainContent> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     final bool isMobileScreen = screenWidth < 600;
+    final bool isTabScreen = screenWidth < 1000 && screenWidth > 600;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -136,7 +156,7 @@ class _MainContentState extends State<MainContent> {
               ),
 
               // ── Navbar (desktop) / BottomNavBar (mobile) ───────────────
-              if (isMobileScreen)
+              if (isMobileScreen || isTabScreen)
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -144,6 +164,7 @@ class _MainContentState extends State<MainContent> {
                   child: BottomNavBar(
                     scrollToSection: _scrollToSection,
                     height: screenHeight * .1,
+                    currentIndex: _activeIndex,
                   ),
                 )
               else
@@ -152,7 +173,10 @@ class _MainContentState extends State<MainContent> {
                   right: screenWidth * .28,
                   left: screenWidth * .28,
                   child: Center(
-                    child: NavBar(scrollToSection: _scrollToSection),
+                    child: NavBar(
+                      scrollToSection: _scrollToSection,
+                      activeIndex: _activeIndex,
+                    ),
                   ),
                 ),
             ],

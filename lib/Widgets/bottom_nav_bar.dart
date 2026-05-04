@@ -38,6 +38,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
     _activeIndex = widget.currentIndex;
   }
 
+  @override
+  void didUpdateWidget(covariant BottomNavBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Sync active index when parent scroll drives a change
+    if (oldWidget.currentIndex != widget.currentIndex) {
+      setState(() => _activeIndex = widget.currentIndex);
+    }
+  }
+
   void _onTap(int index) {
     setState(() => _activeIndex = index);
     widget.scrollToSection(index);
@@ -51,7 +60,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         child: Container(
           height: widget.height,
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.07),
             border: Border(
@@ -78,49 +87,51 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final Color activeColor = AppTheme.lightTheme.colorScheme.primary;
     const Color inactiveColor = Colors.white54;
 
-    return GestureDetector(
-      onTap: () => _onTap(index),
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          // color: isActive ? activeColor.withOpacity(0.15) : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Active dot indicator above icon
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              width: isActive ? 4 : 0,
-              height: isActive ? 4 : 0,
-              margin: const EdgeInsets.only(bottom: 3),
-              decoration: BoxDecoration(
-                color: activeColor,
-                shape: BoxShape.circle,
-              ),
-            ),
-            Icon(
-              _items[index].icon,
-              size: 22,
-              color: isActive ? activeColor : inactiveColor,
-            ),
-            const SizedBox(height: 3),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 250),
-              style: TextStyle(
-                fontSize: isActive ? 10 : 9,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => _onTap(index),
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Active dot indicator
+              // AnimatedContainer(
+              //   duration: const Duration(milliseconds: 250),
+              //   width: isActive ? 4 : 0,
+              //   height: isActive ? 4 : 0,
+              //   margin: const EdgeInsets.only(bottom: 3),
+              //   decoration: BoxDecoration(
+              //     color: activeColor,
+              //     shape: BoxShape.circle,
+              //   ),
+              // ),
+              Icon(
+                _items[index].icon,
+                size: 22,
                 color: isActive ? activeColor : inactiveColor,
-                letterSpacing: 0.3,
               ),
-              child: Text(_items[index].label),
-            ),
-          ],
+              const SizedBox(height: 3),
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 250),
+                style: TextStyle(
+                  fontSize: isActive ? 10 : 9,
+                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+                  color: isActive ? activeColor : inactiveColor,
+                  letterSpacing: 0.3,
+                ),
+                child: Text(_items[index].label),
+              ),
+            ],
+          ),
         ),
       ),
     );

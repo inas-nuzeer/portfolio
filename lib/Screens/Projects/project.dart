@@ -8,7 +8,7 @@ class Project extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isMobile = screenWidth < 600;
+    final bool isMobileScreen = screenWidth < 600;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),
@@ -27,7 +27,7 @@ class Project extends StatelessWidget {
           SizedBox(height: screenHeight * .04),
 
           // Cards — stacked on mobile, side by side on desktop
-          isMobile
+          isMobileScreen
               ? Column(
                   children: [
                     _buildCard1(),
@@ -43,7 +43,9 @@ class Project extends StatelessWidget {
                   ],
                 ),
 
-          SizedBox(height: screenHeight * .04),
+          SizedBox(
+            height: isMobileScreen ? screenHeight * .12 : screenHeight * .04,
+          ),
         ],
       ),
     );

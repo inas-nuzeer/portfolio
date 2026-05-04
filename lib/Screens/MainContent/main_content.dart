@@ -4,6 +4,7 @@ import 'package:inas_portfolio/Screens/Experience/experience.dart';
 import 'package:inas_portfolio/Screens/Home/home.dart';
 import 'package:inas_portfolio/Screens/Projects/project.dart';
 import 'package:inas_portfolio/Screens/Skills/skills.dart';
+import 'package:inas_portfolio/Widgets/bottom_nav_bar.dart';
 import 'package:inas_portfolio/Widgets/glass_container.dart';
 import 'package:inas_portfolio/Widgets/navbar.dart';
 import 'package:inas_portfolio/Widgets/shimmer_section.dart';
@@ -16,10 +17,11 @@ class MainContent extends StatefulWidget {
 }
 
 class _MainContentState extends State<MainContent> {
+  late final List<WidgetBuilder> _sections;
+  final ScrollController _scrollController = ScrollController();
+
   bool _isHovering = false;
   bool _isLoading = false;
-
-  late final List<WidgetBuilder> _sections;
 
   @override
   void initState() {
@@ -27,19 +29,39 @@ class _MainContentState extends State<MainContent> {
     _sections = [
       (_) => const Home(),
       (_) => const About(),
-      (_) => const Project(),
       (_) => const Skill(),
+      (_) => const Project(),
       (_) => const Experience(),
     ];
   }
 
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   Future<void> _onRefresh() async {
     setState(() => _isLoading = true);
-
-    // Simulate a network/data reload — replace with real async work if needed
     await Future.delayed(const Duration(milliseconds: 1800));
-
     if (mounted) setState(() => _isLoading = false);
+  }
+
+  /// Each section has a minHeight of [screenHeight], so the scroll offset
+  /// for section [index] is simply index * screenHeight.
+  /// This is reliable regardless of scroll position or build state.
+  void _scrollToSection(int index) {
+    if (!_scrollController.hasClients) return;
+
+    final double screenHeight = _scrollController.position.viewportDimension;
+    final double targetOffset = index * screenHeight;
+    final double maxOffset = _scrollController.position.maxScrollExtent;
+
+    _scrollController.animateTo(
+      targetOffset.clamp(0.0, maxOffset),
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOutCubic,
+    );
   }
 
   @override
@@ -69,13 +91,12 @@ class _MainContentState extends State<MainContent> {
                 backgroundColor: Colors.black87,
                 strokeWidth: 2.5,
                 child: CustomScrollView(
-                  // Ensures pull-to-refresh works even when content fills screen
+                  controller: _scrollController, // ✅ FIX 1: Add the controller
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          // ── Shimmer state ──────────────────────────────
                           if (_isLoading) {
                             return ShimmerSection(
                               height: screenHeight,
@@ -83,7 +104,6 @@ class _MainContentState extends State<MainContent> {
                             );
                           }
 
-                          // ── Real content ───────────────────────────────
                           final Widget section = _sections[index](context);
 
                           if (index == 0) {
@@ -115,13 +135,26 @@ class _MainContentState extends State<MainContent> {
                 ),
               ),
 
-              // ── Navbar ─────────────────────────────────────────────────
-              Positioned(
-                bottom: isMobileScreen ? 0 : screenHeight * .04,
-                right: isMobileScreen ? 0 : screenWidth * .28,
-                left: isMobileScreen ? 0 : screenWidth * .28,
-                child: const Center(child: NavBar()),
-              ),
+              // ── Navbar (desktop) / BottomNavBar (mobile) ───────────────
+              if (isMobileScreen)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: BottomNavBar(
+                    scrollToSection: _scrollToSection,
+                    height: screenHeight * .1,
+                  ),
+                )
+              else
+                Positioned(
+                  bottom: screenHeight * .04,
+                  right: screenWidth * .28,
+                  left: screenWidth * .28,
+                  child: Center(
+                    child: NavBar(scrollToSection: _scrollToSection),
+                  ),
+                ),
             ],
           ),
         ),

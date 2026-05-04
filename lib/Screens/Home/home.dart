@@ -29,7 +29,9 @@ class _HomeState extends State<Home> {
               // height: screenHeight,
               // color: Colors.white.withOpacity(.5),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: isMobileScreen
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FittedBox(
@@ -58,18 +60,19 @@ class _HomeState extends State<Home> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _personalData1(),
-                        const SizedBox(height: 30),
-                        _personalData2(),
+                        _personalData1(isMobileScreen),
+                        const SizedBox(height: 10),
+                        _personalData2(isMobileScreen),
+                        SizedBox(height: screenHeight * .12),
                       ],
                     ),
                   ] else ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        _personalData1(),
+                        _personalData1(false),
                         const SizedBox(width: 30),
-                        _personalData2(),
+                        _personalData2(false),
                       ],
                     ),
                   ],
@@ -125,12 +128,12 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Widget _personalData1() {
+  Widget _personalData1(bool isMobileScreen) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _personalDataCard(Icons.email_outlined, 'inasnuzeer@gmail.com'),
-        const SizedBox(height: 30),
+        SizedBox(height: isMobileScreen ? 10 : 30),
         MouseRegion(
           onEnter: (_) => setState(() {
             _isHoveringOnLink = true;
@@ -165,12 +168,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _personalData2() {
+  Widget _personalData2(bool isMobileScreen) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _personalDataCard(Icons.phone_android_outlined, '+94 76 418 9477'),
-        const SizedBox(height: 30),
+        SizedBox(height: isMobileScreen ? 10 : 30),
         _personalDataCard(Icons.map_outlined, 'Mawanella, Sri Lanka'),
       ],
     );

@@ -59,7 +59,9 @@ class About extends StatelessWidget {
               textAlign: TextAlign.justify,
             ),
           ),
-          SizedBox(height: screenHeight * .04),
+          SizedBox(
+            height: isMobileScreen ? screenHeight * .12 : screenHeight * .04,
+          ),
         ],
       ),
     );

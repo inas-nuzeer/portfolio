@@ -7,6 +7,7 @@ class Skill extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    final bool isMobileScreen = screenWidth < 600;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),
       child: Column(
@@ -20,6 +21,9 @@ class Skill extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.start,
             ),
+          ),
+          SizedBox(
+            height: isMobileScreen ? screenHeight * .12 : screenHeight * .04,
           ),
         ],
       ),

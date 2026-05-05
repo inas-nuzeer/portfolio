@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   // Typewriter state
   final String _fullName = 'Inas Nuzeer';
-  final String _subtitle = 'Flutter Developer  ·  Software Engineer';
+  final String _subtitle = 'Software Engineer  ·  Flutter Developer';
   String _displayedName = '';
   String _displayedSubtitle = '';
   bool _showCursor = true;
@@ -132,16 +132,18 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final bool isMobile = screenWidth < 600;
+    final bool isMobileScreen = screenWidth < 600;
 
     return FadeTransition(
       opacity: _exitFade,
       child: Scaffold(
         backgroundColor: Colors.black,
         body: DecoratedBox(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/bg_image_mobile.png'),
+              image: isMobileScreen
+                  ? const AssetImage('assets/images/bg_image_mobile.png')
+                  : const AssetImage('assets/images/bg_image.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -159,8 +161,8 @@ class _SplashScreenState extends State<SplashScreen>
                       child: BackdropFilter(
                         filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                         child: Container(
-                          width: isMobile ? 90 : 110,
-                          height: isMobile ? 90 : 110,
+                          width: isMobileScreen ? 90 : 110,
+                          height: isMobileScreen ? 90 : 110,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(28),
                             color: Colors.white.withOpacity(0.1),
@@ -173,7 +175,7 @@ class _SplashScreenState extends State<SplashScreen>
                             child: Text(
                               'IN',
                               style: GoogleFonts.poppins(
-                                fontSize: isMobile ? 36 : 44,
+                                fontSize: isMobileScreen ? 36 : 44,
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFFfeb800),
                                 letterSpacing: 2,
@@ -184,7 +186,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
 
-                    SizedBox(height: isMobile ? 28 : 36),
+                    SizedBox(height: isMobileScreen ? 28 : 36),
 
                     // ── Typewriter name ───────────────────────────────────
                     Row(
@@ -194,7 +196,7 @@ class _SplashScreenState extends State<SplashScreen>
                         Text(
                           _displayedName,
                           style: GoogleFonts.poppins(
-                            fontSize: isMobile ? 28 : 40,
+                            fontSize: isMobileScreen ? 28 : 40,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                             letterSpacing: 1.5,
@@ -209,7 +211,7 @@ class _SplashScreenState extends State<SplashScreen>
                             child: Text(
                               '|',
                               style: GoogleFonts.poppins(
-                                fontSize: isMobile ? 28 : 40,
+                                fontSize: isMobileScreen ? 28 : 40,
                                 fontWeight: FontWeight.w300,
                                 color: const Color(0xFFfeb800),
                               ),
@@ -228,7 +230,7 @@ class _SplashScreenState extends State<SplashScreen>
                         Text(
                           _displayedSubtitle,
                           style: GoogleFonts.inter(
-                            fontSize: isMobile ? 12 : 15,
+                            fontSize: isMobileScreen ? 12 : 15,
                             fontWeight: FontWeight.w300,
                             color: Colors.white.withOpacity(0.55),
                             letterSpacing: 1.2,
@@ -242,7 +244,7 @@ class _SplashScreenState extends State<SplashScreen>
                             child: Text(
                               '|',
                               style: GoogleFonts.inter(
-                                fontSize: isMobile ? 12 : 15,
+                                fontSize: isMobileScreen ? 12 : 15,
                                 fontWeight: FontWeight.w300,
                                 color: const Color(0xFFfeb800),
                               ),
@@ -251,7 +253,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ],
                     ),
 
-                    SizedBox(height: isMobile ? 48 : 64),
+                    SizedBox(height: isMobileScreen ? 48 : 64),
 
                     // ── Loading dots ──────────────────────────────────────
                     _LoadingDots(),

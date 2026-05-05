@@ -4,6 +4,7 @@ import 'package:inas_portfolio/Screens/Experience/experience.dart';
 import 'package:inas_portfolio/Screens/Home/home.dart';
 import 'package:inas_portfolio/Screens/Projects/project.dart';
 import 'package:inas_portfolio/Screens/Skills/skills.dart';
+import 'package:inas_portfolio/Utils/cv_downloader.dart';
 import 'package:inas_portfolio/Widgets/bottom_nav_bar.dart';
 import 'package:inas_portfolio/Widgets/glass_container.dart';
 import 'package:inas_portfolio/Widgets/navbar.dart';
@@ -195,7 +196,7 @@ class _MainContentState extends State<MainContent> {
         onEnter: (_) => setState(() => _isHovering = true),
         onExit: (_) => setState(() => _isHovering = false),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () => downloadCv(),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFfeb800),
             padding: EdgeInsets.zero,

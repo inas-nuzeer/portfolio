@@ -36,37 +36,6 @@ class _HomeState extends State<Home> {
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.start,
                 children: [
-                  // isMobileScreen
-                  //     ? Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: [
-                  //           SizedBox(height: screenHeight * .15),
-                  //           ClipRRect(
-                  //             borderRadius: BorderRadius.circular(100),
-                  //             child: Container(
-                  //               width: 200,
-                  //               height: 200,
-                  //               decoration: BoxDecoration(
-                  //                 borderRadius: BorderRadius.circular(150),
-                  //               ),
-                  //               // borderRadius: 150,
-                  //               child: Center(
-                  //                 child: Image(
-                  //                   image: const AssetImage(
-                  //                     'assets/images/hero_Og_1.png',
-                  //                   ),
-                  //                   fit: BoxFit
-                  //                       .cover, // ← This ensures image covers the circle
-                  //                   width: 200,
-                  //                   height: 200,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           SizedBox(height: screenHeight * .05),
-                  //         ],
-                  //       )
-                  //     : SizedBox.shrink(),
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
@@ -185,7 +154,9 @@ class _HomeState extends State<Home> {
             _isHoveringOnLink = false;
           }),
           child: InkWell(
-            onTap: () => _launchURL('https://www.linkedin.com/inas-nuzeer'),
+            onTap: () => _launchURL(
+              'https://www.linkedin.com/in/inas-nuzeer-22b709202?utm_sourse=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+            ),
             child: Row(
               children: [
                 Icon(

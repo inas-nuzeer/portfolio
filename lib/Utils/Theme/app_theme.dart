@@ -25,6 +25,12 @@ class AppTheme {
         fontWeight: FontWeight.w600,
         color: _backgroundColor,
       ),
+      displayMedium: GoogleFonts.poppins(
+        fontSize: 30,
+        fontWeight: FontWeight.w500,
+        color: _backgroundColor,
+      ),
+
       // Headline 2 (Section Titles)
       headlineMedium: GoogleFonts.poppins(
         fontSize: 56,

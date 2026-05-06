@@ -26,7 +26,7 @@ class About extends StatelessWidget {
               textAlign: TextAlign.start,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 40),
           SizedBox(
             width: isMobileScreen ? screenHeight : screenWidth,
             child: Text(

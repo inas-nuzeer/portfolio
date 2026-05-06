@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inas_portfolio/Screens/About/about.dart';
+import 'package:inas_portfolio/Screens/Education/education.dart';
 import 'package:inas_portfolio/Screens/Experience/experience.dart';
 import 'package:inas_portfolio/Screens/Home/home.dart';
 import 'package:inas_portfolio/Screens/Projects/project.dart';
@@ -21,6 +22,9 @@ class _MainContentState extends State<MainContent> {
   late final List<WidgetBuilder> _sections;
   final ScrollController _scrollController = ScrollController();
 
+  // One key per section — used to measure actual rendered offsets
+  late final List<GlobalKey> _sectionKeys;
+
   bool _isHovering = false;
   bool _isLoading = false;
   int _activeIndex = 0;
@@ -34,24 +38,10 @@ class _MainContentState extends State<MainContent> {
       (_) => const Skill(),
       (_) => const Experience(),
       (_) => const Project(),
+      (_) => const Education(),
     ];
+    _sectionKeys = List.generate(_sections.length, (_) => GlobalKey());
     _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (!_scrollController.hasClients) return;
-    final double offset = _scrollController.offset;
-    final double sectionHeight = _scrollController.position.viewportDimension;
-
-    // Which section occupies the majority of the viewport right now
-    final int index = (offset / sectionHeight).round().clamp(
-      0,
-      _sections.length - 1,
-    );
-
-    if (index != _activeIndex) {
-      setState(() => _activeIndex = index);
-    }
   }
 
   @override
@@ -61,27 +51,80 @@ class _MainContentState extends State<MainContent> {
     super.dispose();
   }
 
+  // ── Returns the scroll offset of section [index] by reading its RenderBox ──
+  double? _offsetOfSection(int index) {
+    final ctx = _sectionKeys[index].currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return null;
+
+    // Position relative to the scroll view's own render object
+    final scrollBox =
+        _scrollController.position.context.storageContext.findRenderObject()
+            as RenderBox?;
+    if (scrollBox == null) return null;
+
+    final offset = box.localToGlobal(Offset.zero, ancestor: scrollBox);
+    return _scrollController.offset + offset.dy;
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final double currentOffset = _scrollController.offset;
+    final double viewport = _scrollController.position.viewportDimension;
+
+    // Find which section's top is closest to (but not past) the viewport centre
+    int best = 0;
+    double bestDist = double.infinity;
+
+    for (int i = 0; i < _sections.length; i++) {
+      final sectionOffset = _offsetOfSection(i);
+      if (sectionOffset == null) continue;
+
+      // Distance from the section top to the current scroll position
+      final double dist = (sectionOffset - currentOffset).abs();
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+
+      // Once we've passed the midpoint of the viewport, prefer the next section
+      if (sectionOffset > currentOffset + viewport * 0.5) break;
+    }
+
+    if (best != _activeIndex) setState(() => _activeIndex = best);
+  }
+
+  void _scrollToSection(int index) {
+    if (!_scrollController.hasClients) return;
+
+    final offset = _offsetOfSection(index);
+    if (offset != null) {
+      // Scroll to the exact top of the section
+      _scrollController.animateTo(
+        offset.clamp(0.0, _scrollController.position.maxScrollExtent),
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic,
+      );
+    } else {
+      // Section not built yet (lazy list) — fall back to estimated offset
+      // using accumulated minHeights (screenHeight per section)
+      final double screenHeight = _scrollController.position.viewportDimension;
+      _scrollController.animateTo(
+        (index * screenHeight).clamp(
+          0.0,
+          _scrollController.position.maxScrollExtent,
+        ),
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
   Future<void> _onRefresh() async {
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(milliseconds: 1800));
     if (mounted) setState(() => _isLoading = false);
-  }
-
-  /// Each section has a minHeight of [screenHeight], so the scroll offset
-  /// for section [index] is simply index * screenHeight.
-  /// This is reliable regardless of scroll position or build state.
-  void _scrollToSection(int index) {
-    if (!_scrollController.hasClients) return;
-
-    final double screenHeight = _scrollController.position.viewportDimension;
-    final double targetOffset = index * screenHeight;
-    final double maxOffset = _scrollController.position.maxScrollExtent;
-
-    _scrollController.animateTo(
-      targetOffset.clamp(0.0, maxOffset),
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.easeInOutCubic,
-    );
   }
 
   @override
@@ -127,18 +170,19 @@ class _MainContentState extends State<MainContent> {
 
                           final Widget section = _sections[index](context);
 
-                          if (index == 0) {
-                            return _constrainedBox(section, screenHeight);
+                          // Wrap with a keyed container so we can measure offset
+                          Widget child = _constrainedBox(section, screenHeight);
+
+                          if (index != 0 && index != 2 && index != 4) {
+                            child = GlassContainer(
+                              width: screenWidth,
+                              child: child,
+                            );
                           }
-                          if (index == 2) {
-                            return _constrainedBox(section, screenHeight);
-                          }
-                          if (index == 4) {
-                            return _constrainedBox(section, screenHeight);
-                          }
-                          return GlassContainer(
-                            width: screenWidth,
-                            child: _constrainedBox(section, screenHeight),
+
+                          return KeyedSubtree(
+                            key: _sectionKeys[index],
+                            child: child,
                           );
                         },
                         childCount: _sections.length,
@@ -176,8 +220,8 @@ class _MainContentState extends State<MainContent> {
               else
                 Positioned(
                   bottom: screenHeight * .04,
-                  right: screenWidth * .28,
-                  left: screenWidth * .28,
+                  right: screenWidth * .20,
+                  left: screenWidth * .20,
                   child: Center(
                     child: NavBar(
                       scrollToSection: _scrollToSection,

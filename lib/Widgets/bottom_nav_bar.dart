@@ -28,8 +28,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
     _NavItem(icon: Icons.home_rounded, label: 'Home'),
     _NavItem(icon: Icons.person_rounded, label: 'About'),
     _NavItem(icon: Icons.bolt_rounded, label: 'Skills'),
-    _NavItem(icon: Icons.work_rounded, label: 'Projects'),
     _NavItem(icon: Icons.timeline_rounded, label: 'Experience'),
+    _NavItem(icon: Icons.work_rounded, label: 'Projects'),
+    _NavItem(icon: Icons.school_rounded, label: 'Education'),
   ];
 
   @override

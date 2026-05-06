@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inas_portfolio/Utils/Theme/app_theme.dart';
@@ -18,13 +19,15 @@ class Education extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight * .04),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              'Education & Achievements',
-              style: Theme.of(context).textTheme.headlineMedium,
-              textAlign: TextAlign.start,
-            ),
+          AutoSizeText(
+            'Education & Achievements',
+            style: Theme.of(context).textTheme.headlineMedium,
+            textAlign: TextAlign.start,
+            maxLines: 2,
+            minFontSize: 12, // Minimum font size before it scales down
+            stepGranularity: 1, // How much to reduce font size by each step
+            overflow:
+                TextOverflow.clip, // Just clip instead of showing ellipsis
           ),
           const SizedBox(height: 40),
           _educationAndAchievements(
@@ -32,6 +35,7 @@ class Education extends StatelessWidget {
             'National Textile University, Faisalabad, Pakistan',
             2020,
             2024,
+            isMobileScreen,
           ),
           const SizedBox(height: 20),
           _educationAndAchievements(
@@ -39,6 +43,7 @@ class Education extends StatelessWidget {
             'Developed "Xplorit Rent With Ease", a rental mobile application for both lenders and renters at Department of Computer Science, National Textile University, Faisalabad',
             2024,
             2024,
+            isMobileScreen,
           ),
           SizedBox(
             height: isMobileScreen ? screenHeight * .12 : screenHeight * .04,
@@ -53,6 +58,7 @@ class Education extends StatelessWidget {
     String text,
     int yearStart,
     int yearEnd,
+    bool isMobileScreen,
   ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +67,7 @@ class Education extends StatelessWidget {
           padding: const EdgeInsets.only(top: 15),
           child: Icon(
             Icons.circle,
-            size: 12,
+            size: isMobileScreen ? 10 : 12,
             color: AppTheme.lightTheme.primaryColor,
           ),
         ),
@@ -77,7 +83,7 @@ class Education extends StatelessWidget {
                           ? '$title ($yearStart - $yearEnd)'
                           : title), // 'title',
                 style: GoogleFonts.poppins(
-                  fontSize: 28,
+                  fontSize: isMobileScreen ? 20 : 28,
                   fontWeight: FontWeight.w500,
                   color: AppTheme.lightTheme.secondaryHeaderColor,
                 ),
@@ -86,7 +92,7 @@ class Education extends StatelessWidget {
               Text(
                 text,
                 style: GoogleFonts.poppins(
-                  fontSize: 20,
+                  fontSize: isMobileScreen ? 16 : 20,
                   fontWeight: FontWeight.w500,
                   color: AppTheme.lightTheme.primaryColor,
                 ),

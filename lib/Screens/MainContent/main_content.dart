@@ -71,28 +71,22 @@ class _MainContentState extends State<MainContent> {
   void _onScroll() {
     if (!_scrollController.hasClients) return;
     final double currentOffset = _scrollController.offset;
-    final double viewport = _scrollController.position.viewportDimension;
 
-    // Find which section's top is closest to (but not past) the viewport centre
-    int best = 0;
-    double bestDist = double.infinity;
-
+    // Active section = the last one whose top edge is at or above
+    // the current scroll position. This works correctly even when
+    // sections are taller than the viewport.
+    int active = 0;
     for (int i = 0; i < _sections.length; i++) {
-      final sectionOffset = _offsetOfSection(i);
-      if (sectionOffset == null) continue;
-
-      // Distance from the section top to the current scroll position
-      final double dist = (sectionOffset - currentOffset).abs();
-      if (dist < bestDist) {
-        bestDist = dist;
-        best = i;
+      final sectionTop = _offsetOfSection(i);
+      if (sectionTop == null) continue;
+      if (sectionTop <= currentOffset + 1) {
+        active = i;
+      } else {
+        break; // sections are in order, no need to continue
       }
-
-      // Once we've passed the midpoint of the viewport, prefer the next section
-      if (sectionOffset > currentOffset + viewport * 0.5) break;
     }
 
-    if (best != _activeIndex) setState(() => _activeIndex = best);
+    if (active != _activeIndex) setState(() => _activeIndex = active);
   }
 
   void _scrollToSection(int index) {

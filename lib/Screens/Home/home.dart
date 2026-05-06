@@ -168,7 +168,7 @@ class _HomeState extends State<Home> {
                 //   ),
                 //   child:
                 Image.asset(
-                  'icons/linkedin_16.png',
+                  'assets/icons/linkedin_16.png',
                   width: 20,
                   height: 20,
                   // errorBuilder: (_, __, ___) =>

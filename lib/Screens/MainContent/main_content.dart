@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:inas_portfolio/Screens/About/about.dart';
 import 'package:inas_portfolio/Screens/Education/education.dart';
 import 'package:inas_portfolio/Screens/Experience/experience.dart';
@@ -21,9 +22,11 @@ class MainContent extends StatefulWidget {
 class _MainContentState extends State<MainContent> {
   late final List<WidgetBuilder> _sections;
   final ScrollController _scrollController = ScrollController();
-
-  // One key per section — used to measure actual rendered offsets
   late final List<GlobalKey> _sectionKeys;
+
+  // Cached absolute scroll offsets for each section top.
+  // Populated after layout and refreshed on scroll (lazy sections build late).
+  final List<double?> _sectionOffsets = [];
 
   bool _isHovering = false;
   bool _isLoading = false;
@@ -41,7 +44,12 @@ class _MainContentState extends State<MainContent> {
       (_) => const Education(),
     ];
     _sectionKeys = List.generate(_sections.length, (_) => GlobalKey());
+    _sectionOffsets.addAll(List.filled(_sections.length, null));
+
     _scrollController.addListener(_onScroll);
+
+    // Measure offsets after the first frame
+    SchedulerBinding.instance.addPostFrameCallback((_) => _measureOffsets());
   }
 
   @override
@@ -51,38 +59,48 @@ class _MainContentState extends State<MainContent> {
     super.dispose();
   }
 
-  // ── Returns the scroll offset of section [index] by reading its RenderBox ──
-  double? _offsetOfSection(int index) {
-    final ctx = _sectionKeys[index].currentContext;
-    if (ctx == null) return null;
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null || !box.hasSize) return null;
+  // ── Measure and cache the absolute scroll offset of every built section ──
+  void _measureOffsets() {
+    if (!_scrollController.hasClients) return;
 
-    // Position relative to the scroll view's own render object
     final scrollBox =
         _scrollController.position.context.storageContext.findRenderObject()
             as RenderBox?;
-    if (scrollBox == null) return null;
+    if (scrollBox == null) return;
 
-    final offset = box.localToGlobal(Offset.zero, ancestor: scrollBox);
-    return _scrollController.offset + offset.dy;
+    for (int i = 0; i < _sections.length; i++) {
+      final ctx = _sectionKeys[i].currentContext;
+      if (ctx == null) continue;
+      final box = ctx.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) continue;
+
+      final localOffset = box.localToGlobal(Offset.zero, ancestor: scrollBox);
+      _sectionOffsets[i] = _scrollController.offset + localOffset.dy;
+    }
+  }
+
+  // ── Returns cached offset, re-measuring if not yet available ──
+  double? _offsetOfSection(int index) {
+    if (_sectionOffsets[index] == null) _measureOffsets();
+    return _sectionOffsets[index];
   }
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
+
+    // Re-measure on every scroll tick so newly-built lazy sections get cached
+    _measureOffsets();
     final double currentOffset = _scrollController.offset;
 
-    // Active section = the last one whose top edge is at or above
-    // the current scroll position. This works correctly even when
-    // sections are taller than the viewport.
+    // Active = last section whose top is at or above the current scroll offset
     int active = 0;
     for (int i = 0; i < _sections.length; i++) {
-      final sectionTop = _offsetOfSection(i);
-      if (sectionTop == null) continue;
-      if (sectionTop <= currentOffset + 1) {
+      final top = _sectionOffsets[i];
+      if (top == null) continue;
+      if (top <= currentOffset + 1) {
         active = i;
       } else {
-        break; // sections are in order, no need to continue
+        break;
       }
     }
 
@@ -92,33 +110,60 @@ class _MainContentState extends State<MainContent> {
   void _scrollToSection(int index) {
     if (!_scrollController.hasClients) return;
 
-    final offset = _offsetOfSection(index);
+    // Re-measure before scrolling — sections may have been built since last tick
+    _measureOffsets();
+
+    final double? offset = _sectionOffsets[index];
+
     if (offset != null) {
-      // Scroll to the exact top of the section
       _scrollController.animateTo(
         offset.clamp(0.0, _scrollController.position.maxScrollExtent),
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOutCubic,
       );
     } else {
-      // Section not built yet (lazy list) — fall back to estimated offset
-      // using accumulated minHeights (screenHeight per section)
-      final double screenHeight = _scrollController.position.viewportDimension;
-      _scrollController.animateTo(
-        (index * screenHeight).clamp(
-          0.0,
-          _scrollController.position.maxScrollExtent,
-        ),
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOutCubic,
-      );
+      // Section not built yet — scroll far enough to trigger its build,
+      // then scroll again once it's laid out.
+      final double estimated =
+          _scrollController.position.maxScrollExtent *
+          index /
+          (_sections.length - 1);
+
+      _scrollController
+          .animateTo(
+            estimated.clamp(0.0, _scrollController.position.maxScrollExtent),
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeIn,
+          )
+          .then((_) {
+            // After the scroll settles, sections should be built — measure and scroll precisely
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              _measureOffsets();
+              final double? precise = _sectionOffsets[index];
+              if (precise != null && _scrollController.hasClients) {
+                _scrollController.animateTo(
+                  precise.clamp(
+                    0.0,
+                    _scrollController.position.maxScrollExtent,
+                  ),
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOutCubic,
+                );
+              }
+            });
+          });
     }
   }
 
   Future<void> _onRefresh() async {
     setState(() => _isLoading = true);
+    // Reset cached offsets so they're re-measured after shimmer → real content swap
+    _sectionOffsets.fillRange(0, _sectionOffsets.length, null);
     await Future.delayed(const Duration(milliseconds: 1800));
-    if (mounted) setState(() => _isLoading = false);
+    if (mounted) {
+      setState(() => _isLoading = false);
+      SchedulerBinding.instance.addPostFrameCallback((_) => _measureOffsets());
+    }
   }
 
   @override
@@ -163,10 +208,9 @@ class _MainContentState extends State<MainContent> {
                           }
 
                           final Widget section = _sections[index](context);
-
-                          // Wrap with a keyed container so we can measure offset
                           Widget child = _constrainedBox(section, screenHeight);
 
+                          // Alternate glass / no-glass per section
                           if (index != 0 && index != 2 && index != 4) {
                             child = GlassContainer(
                               width: screenWidth,
@@ -180,7 +224,8 @@ class _MainContentState extends State<MainContent> {
                           );
                         },
                         childCount: _sections.length,
-                        addAutomaticKeepAlives: false,
+                        // Keep all sections alive so GlobalKeys stay valid
+                        addAutomaticKeepAlives: true,
                         addRepaintBoundaries: true,
                       ),
                     ),

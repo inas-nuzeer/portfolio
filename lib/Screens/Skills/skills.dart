@@ -38,59 +38,85 @@ class _SkillState extends State<Skill> with SingleTickerProviderStateMixin {
     final double screenHeight = MediaQuery.of(context).size.height;
     final bool isMobile = screenWidth < 600;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: screenHeight * .04),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Available height — at least one full screen, possibly more if
+        // the parent ConstrainedBox gives more room.
+        final double availableHeight = constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : screenHeight;
 
-          // ── Section title ──────────────────────────────────────────────
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              'Skills',
-              style: Theme.of(context).textTheme.headlineMedium,
+        return SizedBox(
+          height: availableHeight,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: screenHeight * .03),
+
+                // ── Section title (fixed) ────────────────────────────────
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Skills',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ),
+
+                SizedBox(height: screenHeight * .01),
+
+                // ── Tab bar (fixed) ──────────────────────────────────────
+                _SkillTabBar(
+                  controller: _tabController,
+                  activeIndex: _activeTab,
+                  isMobile: isMobile,
+                ),
+
+                SizedBox(height: screenHeight * .02),
+
+                // ── Scrollable tab content ───────────────────────────────
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 350),
+                          switchInCurve: Curves.easeOut,
+                          switchOutCurve: Curves.easeIn,
+                          transitionBuilder: (child, animation) =>
+                              FadeTransition(
+                                opacity: animation,
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0.04, 0),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  child: child,
+                                ),
+                              ),
+                          child: _TabContent(
+                            key: ValueKey(_activeTab),
+                            tab: skillTabs[_activeTab],
+                            isMobile: isMobile,
+                            screenWidth: screenWidth,
+                          ),
+                        ),
+                        SizedBox(
+                          height: isMobile
+                              ? screenHeight * .12
+                              : screenHeight * .04,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-
-          SizedBox(height: screenHeight * .03),
-
-          // ── Tab bar ────────────────────────────────────────────────────
-          _SkillTabBar(
-            controller: _tabController,
-            activeIndex: _activeTab,
-            isMobile: isMobile,
-          ),
-
-          SizedBox(height: screenHeight * .03),
-
-          // ── Tab content ────────────────────────────────────────────────
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 350),
-            switchInCurve: Curves.easeOut,
-            switchOutCurve: Curves.easeIn,
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.04, 0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              ),
-            ),
-            child: _TabContent(
-              key: ValueKey(_activeTab),
-              tab: skillTabs[_activeTab],
-              isMobile: isMobile,
-              screenWidth: screenWidth,
-            ),
-          ),
-
-          SizedBox(height: isMobile ? screenHeight * .12 : screenHeight * .04),
-        ],
-      ),
+        );
+      },
     );
   }
 }

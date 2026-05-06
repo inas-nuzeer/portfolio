@@ -92,7 +92,7 @@ class Education extends StatelessWidget {
               Text(
                 text,
                 style: GoogleFonts.poppins(
-                  fontSize: isMobileScreen ? 16 : 20,
+                  fontSize: isMobileScreen ? 14 : 20,
                   fontWeight: FontWeight.w500,
                   color: AppTheme.lightTheme.primaryColor,
                 ),

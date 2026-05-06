@@ -10,6 +10,8 @@ class About extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     final bool isMobileScreen = screenWidth < 600;
+    final String role = 'Associate Software Developer';
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),
       child: Column(
@@ -28,7 +30,7 @@ class About extends StatelessWidget {
           SizedBox(
             width: isMobileScreen ? screenHeight : screenWidth,
             child: Text(
-              "I am an experienced and detail-oriented UX/UI product designer dedicated to creating intuitive and impactful digital experiences. Over the years, I have honed my skills in user research, wireframing, prototyping, and visual design, always striving to balance user needs with business objectives. My passion lies in understanding how people interact with technology and crafting solutions that are both functional and aesthetically pleasing",
+              "I build software that focuses on performance, usability, and real-world impact. As a Software Engineering graduate, I specialize in developing cross-platform mobile applications and full-stack web solutions using Flutter and Laravel. My experience includes working on production-level projects, where I've handled everything from UI design and API integration to backend logic and database management. I pay close attention to writing clean, scalable code and creating smooth user experiences that make applications feel reliable and intuitive.",
               style: GoogleFonts.inter(
                 fontSize: isMobileScreen ? 12 : 20,
                 color: AppTheme.lightTheme.colorScheme.surface,
@@ -49,14 +51,36 @@ class About extends StatelessWidget {
                 ),
               ),
             ),
-            child: Text(
-              "I am an experienced and detail-oriented UX/UI product designer dedicated to creating intuitive and impactful digital experiences. Over the years, I have honed my skills in user research, wireframing, prototyping, and visual design, always striving to balance user needs with business objectives. My passion lies in understanding how people interact with technology and crafting solutions that are both functional and aesthetically pleasing",
-              style: GoogleFonts.inter(
-                fontSize: isMobileScreen ? 15 : 24,
-                color: AppTheme.lightTheme.colorScheme.surface,
-                height: isMobileScreen ? 1.2 : 1.5,
+            child: RichText(
+              text: TextSpan(
+                style: GoogleFonts.inter(
+                  fontSize: isMobileScreen ? 13 : 24,
+                  color: AppTheme.lightTheme.colorScheme.surface,
+                  height: isMobileScreen ? 1.1 : 1.5,
+                ),
+                children: [
+                  TextSpan(
+                    text:
+                        "I approach development with a problem-solving mindset—analyzing requirements, designing efficient solutions, and continuously refining my work to meet real-world needs. I'm always learning, always building, and always looking for ways to improve both technically and professionally. I'm currently seeking an ",
+                    // textAlign: TextAlign.justify,
+                  ),
+                  TextSpan(
+                    text: role,
+                    style: GoogleFonts.inter(
+                      fontSize: isMobileScreen ? 13 : 24,
+                      color: AppTheme.lightTheme.colorScheme.primary,
+                      height: isMobileScreen ? 1.1 : 1.5,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    // textAlign: TextAlign.justify,
+                  ),
+                  TextSpan(
+                    text:
+                        " role where I can contribute to impactful products, collaborate with skilled teams, and grow into a highly capable engineer.",
+                    // textAlign: TextAlign.justify,
+                  ),
+                ],
               ),
-              textAlign: TextAlign.justify,
             ),
           ),
           SizedBox(

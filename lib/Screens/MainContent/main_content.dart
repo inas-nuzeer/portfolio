@@ -32,8 +32,8 @@ class _MainContentState extends State<MainContent> {
       (_) => const Home(),
       (_) => const About(),
       (_) => const Skill(),
-      (_) => const Project(),
       (_) => const Experience(),
+      (_) => const Project(),
     ];
     _scrollController.addListener(_onScroll);
   }
@@ -112,7 +112,7 @@ class _MainContentState extends State<MainContent> {
                 backgroundColor: Colors.black87,
                 strokeWidth: 2.5,
                 child: CustomScrollView(
-                  controller: _scrollController, // ✅ FIX 1: Add the controller
+                  controller: _scrollController,
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverList(
@@ -130,7 +130,12 @@ class _MainContentState extends State<MainContent> {
                           if (index == 0) {
                             return _constrainedBox(section, screenHeight);
                           }
-
+                          if (index == 2) {
+                            return _constrainedBox(section, screenHeight);
+                          }
+                          if (index == 4) {
+                            return _constrainedBox(section, screenHeight);
+                          }
                           return GlassContainer(
                             width: screenWidth,
                             child: _constrainedBox(section, screenHeight),

@@ -159,11 +159,22 @@ class _HomeState extends State<Home> {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.linked_camera_outlined,
-                  size: 20,
-                  color: Color(0xFFfeb800),
+                // Container(
+                //   decoration: BoxDecoration(
+                //     border: Border.all(
+                //       width: 1,
+                //       color: AppTheme.lightTheme.primaryColor,
+                //     ),
+                //   ),
+                //   child:
+                Image.asset(
+                  'icons/linkedin_16.png',
+                  width: 20,
+                  height: 20,
+                  // errorBuilder: (_, __, ___) =>
+                  //     Icon(Icons.link, size: 20, color: Color(0xFFfeb800)),
                 ),
+                // ),
                 const SizedBox(width: 8),
                 Text(
                   'linkedin.com/inas-nuzeer',

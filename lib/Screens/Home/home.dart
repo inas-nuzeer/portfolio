@@ -10,6 +10,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool _isHoveringOnLink = false;
+  bool _isLaunchingLink = false;
+
+  Future<void> _launchURL(String url) async {
+    if (_isLaunchingLink) return;
+    setState(() => _isLaunchingLink = true);
+    try {
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      }
+    } finally {
+      if (mounted) setState(() => _isLaunchingLink = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,15 +145,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   Widget _personalData1(bool isMobileScreen) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,43 +152,39 @@ class _HomeState extends State<Home> {
         _personalDataCard(Icons.email_outlined, 'inasnuzeer@gmail.com'),
         SizedBox(height: isMobileScreen ? 10 : 30),
         MouseRegion(
-          onEnter: (_) => setState(() {
-            _isHoveringOnLink = true;
-          }),
-          onExit: (_) => setState(() {
-            _isHoveringOnLink = false;
-          }),
+          onEnter: (_) => setState(() => _isHoveringOnLink = true),
+          onExit: (_) => setState(() => _isHoveringOnLink = false),
           child: InkWell(
             onTap: () => _launchURL(
               'https://www.linkedin.com/in/inas-nuzeer-22b709202?utm_sourse=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
             ),
             child: Row(
               children: [
-                // Container(
-                //   decoration: BoxDecoration(
-                //     border: Border.all(
-                //       width: 1,
-                //       color: AppTheme.lightTheme.primaryColor,
-                //     ),
-                //   ),
-                //   child:
-                Image.asset(
-                  'assets/icons/linkedin_16.png',
-                  width: 20,
-                  height: 20,
-                  // errorBuilder: (_, __, ___) =>
-                  //     Icon(Icons.link, size: 20, color: Color(0xFFfeb800)),
-                ),
-                // ),
+                if (_isLaunchingLink)
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Color(0xFFfeb800),
+                    ),
+                  )
+                else
+                  Image.asset(
+                    'assets/icons/linkedin_16.png',
+                    width: 20,
+                    height: 20,
+                  ),
                 const SizedBox(width: 8),
                 Text(
                   'linkedin.com/inas-nuzeer',
                   style: TextStyle(
-                    color: _isHoveringOnLink ? Color(0xFFfeb800) : Colors.white,
+                    color: _isHoveringOnLink
+                        ? const Color(0xFFfeb800)
+                        : Colors.white,
                     fontWeight: FontWeight.normal,
                     fontSize: 20,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),

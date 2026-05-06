@@ -21,6 +21,7 @@ class _MainContentState extends State<MainContent> {
   final ScrollController _scrollController = ScrollController();
 
   bool _isHovering = false;
+  bool _isDownloading = false;
   int _activeIndex = 0;
 
   @override
@@ -170,13 +171,32 @@ class _MainContentState extends State<MainContent> {
         onEnter: (_) => setState(() => _isHovering = true),
         onExit: (_) => setState(() => _isHovering = false),
         child: ElevatedButton(
-          onPressed: () => downloadCv(),
+          onPressed: _isDownloading
+              ? null
+              : () async {
+                  setState(() => _isDownloading = true);
+                  try {
+                    await downloadCv();
+                  } finally {
+                    if (mounted) setState(() => _isDownloading = false);
+                  }
+                },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFfeb800),
+            disabledBackgroundColor: const Color(0xFFfeb800),
             padding: EdgeInsets.zero,
           ),
           child: Center(
-            child: _isHovering
+            child: _isDownloading
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.black,
+                    ),
+                  )
+                : _isHovering
                 ? const Icon(Icons.download, size: 18, color: Colors.black)
                 : const Text(
                     'Download CV',

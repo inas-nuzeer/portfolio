@@ -103,14 +103,12 @@ class _SkillState extends State<Skill> with SingleTickerProviderStateMixin {
                             screenWidth: screenWidth,
                           ),
                         ),
-                        SizedBox(
-                          height: isMobile
-                              ? screenHeight * .12
-                              : screenHeight * .04,
-                        ),
                       ],
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: isMobile ? screenHeight * .12 : screenHeight * .04,
                 ),
               ],
             ),

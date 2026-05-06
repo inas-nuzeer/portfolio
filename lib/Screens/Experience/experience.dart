@@ -28,6 +28,7 @@ class Experience extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // ── Scrollable tab content ───────────────────────────────
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -171,14 +172,12 @@ class Experience extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: isMobileScreen
-                          ? screenHeight * .12
-                          : screenHeight * .04,
-                    ),
                   ],
                 ),
               ),
+            ),
+            SizedBox(
+              height: isMobileScreen ? screenHeight * .12 : screenHeight * .04,
             ),
           ],
         ),

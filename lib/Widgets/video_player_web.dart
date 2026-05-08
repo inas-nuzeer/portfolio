@@ -1,12 +1,13 @@
-// Web-only implementation — registers a <video> element and returns an HtmlElementView.
-// Uses dart:js_interop (Dart 3+) to create the DOM element without needing
-// package:web or the deprecated dart:html.
+// Web-only implementation — registers a <video> element inside a wrapper <div>
+// and returns an HtmlElementView.
+//
+// The wrapper div has overflow:hidden + border-radius applied so the video
+// is clipped at the DOM level. Flutter's ClipRRect has no effect on platform
+// views, so this is the only reliable way to clip HtmlElementView on mobile.
 //
 // Asset URL resolution:
 //   ui_web.assetManager.getAssetUrl(path) returns the correct absolute URL
 //   for both debug (localhost) and production (GitHub Pages sub-path).
-//   This fixes the 404 errors that occur in production when the video src
-//   is a bare relative path like "assets/projects/foo.mp4".
 
 // ignore_for_file: avoid_web_libraries_in_flutter
 
@@ -27,11 +28,13 @@ Widget buildWebVideoPlayer(String src) {
 @JS('document.createElement')
 external JSObject _createElement(String tag);
 
-extension _VideoElementExt on JSObject {
+extension _ElementExt on JSObject {
+  // video-specific
   external set src(String value);
   external set controls(bool value);
   external set autoplay(bool value);
   external void setAttribute(String name, String value);
+  external void appendChild(JSObject child);
   external JSObject get style;
 }
 
@@ -40,6 +43,9 @@ extension _StyleExt on JSObject {
   external set height(String value);
   external set objectFit(String value);
   external set background(String value);
+  external set overflow(String value);
+  external set borderRadius(String value);
+  external set display(String value);
 }
 
 // ── Widget ────────────────────────────────────────────────────────────────────
@@ -58,19 +64,26 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    // Unique ID per instance so multiple videos on the same page don't clash.
     _viewId =
         'video-player-${widget.src.hashCode}-${DateTime.now().microsecondsSinceEpoch}';
 
     if (!_registeredVideoViews.contains(_viewId)) {
       _registeredVideoViews.add(_viewId);
 
-      // Resolve the asset to an absolute URL so it works on GitHub Pages
-      // (where the app is served under a sub-path like /portfolio/).
-      // getAssetUrl handles both debug and release correctly.
+      // Resolve to absolute URL so it works on GitHub Pages sub-paths.
       final String resolvedSrc = ui_web.assetManager.getAssetUrl(widget.src);
 
       ui_web.platformViewRegistry.registerViewFactory(_viewId, (_) {
+        // ── Wrapper div — clips the video at the DOM level ──────────────
+        final wrapper = _createElement('div');
+        wrapper.style.width = '100%';
+        wrapper.style.height = '100%';
+        wrapper.style.overflow = 'hidden';
+        wrapper.style.borderRadius = '16px';
+        wrapper.style.background = '#000000';
+        wrapper.style.display = 'flex';
+
+        // ── Video element ───────────────────────────────────────────────
         final video = _createElement('video');
         video.src = resolvedSrc;
         video.controls = true;
@@ -82,8 +95,10 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
         video.style.height = '100%';
         video.style.objectFit = 'contain';
         video.style.background = '#000000';
+        video.style.borderRadius = '16px';
 
-        return video;
+        wrapper.appendChild(video);
+        return wrapper;
       });
     }
   }

@@ -323,15 +323,15 @@ class _MediaCarouselState extends State<_MediaCarousel> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool hasCaption =
         widget.items[_currentIndex].caption?.isNotEmpty == true;
-    final bool currentIsVideo =
-        widget.items[_currentIndex].type == MediaType.video;
 
-    // Videos need a fixed height; images size to their natural aspect ratio.
-    // On desktop the carousel sits in a constrained column so we keep a fixed
-    // height there too — only on mobile do we let images be natural height.
-    final double? fixedHeight = currentIsVideo || !widget.isMobile
-        ? (widget.isMobile ? screenWidth * 0.75 : screenWidth * 0.45 * 0.5)
-        : null; // null → wrap to image height on mobile
+    // Both images and videos now size themselves naturally on mobile:
+    // - images via fitWidth
+    // - videos via AspectRatio(2:1) inside _VideoSlide
+    // On desktop we keep a fixed height since the carousel sits in a
+    // constrained side column.
+    final double? fixedHeight = widget.isMobile
+        ? null // natural height on mobile — no fixed container
+        : screenWidth * 0.45 * 0.5;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
@@ -394,13 +394,10 @@ class _MediaCarouselState extends State<_MediaCarousel> {
   }
 
   Widget _slideStack() {
-    final bool fixedMode =
-        widget.items[_currentIndex].type == MediaType.video || !widget.isMobile;
-
-    // In fixed mode PageView fills the Expanded parent.
-    // In natural mode we show only the current slide (no PageView scroll)
-    // because PageView requires a fixed height.
-    if (fixedMode) {
+    // On desktop use PageView (fixed height from Expanded).
+    // On mobile both images and videos size naturally, so use the
+    // GestureDetector + Stack approach for both.
+    if (!widget.isMobile) {
       return PageView.builder(
         controller: _pageController,
         itemCount: widget.items.length,
@@ -409,8 +406,7 @@ class _MediaCarouselState extends State<_MediaCarousel> {
       );
     }
 
-    // Natural-height mode: show current image + overlay arrows/badge.
-    // Swipe is handled by a GestureDetector since PageView needs fixed height.
+    // Mobile natural-height mode: show current slide + overlay arrows/badge.
     return GestureDetector(
       onHorizontalDragEnd: (details) {
         if (details.primaryVelocity == null) return;
@@ -493,71 +489,24 @@ class _ImageSlide extends StatelessWidget {
   }
 }
 
-/// Video slide that shows the video player inline in the carousel.
-/// On mobile, HtmlElementView can have positioning issues inside scrollable
-/// containers, but we show it anyway. User can tap the expand button to view
-/// fullscreen if needed.
+/// Video slide — uses a 1:2 (h:w) AspectRatio so the container is always
+/// properly bounded. The HtmlElementView is wrapped in a div with
+/// overflow:hidden applied via JS so it respects the container boundary
+/// on mobile browsers (Flutter's ClipRRect has no effect on platform views).
 class _VideoSlide extends StatelessWidget {
   final String src;
   const _VideoSlide({required this.src});
 
-  // void _openFullscreen(BuildContext context) {
-  //   showDialog<void>(
-  //     context: context,
-  //     barrierColor: Colors.black.withOpacity(0.92),
-  //     builder: (_) => _FullscreenVideoDialog(src: src),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // ── Video player ─────────────────────────────────────────────────
-        VideoPlayerWidget(src: src),
-
-        // ── Expand button (top-left) ─────────────────────────────────────
-        // Positioned(
-        //   top: 8,
-        //   left: 8,
-        //   child: GestureDetector(
-        //     onTap: () => _openFullscreen(context),
-        //     child: Container(
-        //       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        //       decoration: BoxDecoration(
-        //         borderRadius: BorderRadius.circular(8),
-        //         color: Colors.black.withOpacity(0.6),
-        //         border: Border.all(color: Colors.white.withOpacity(0.2)),
-        //       ),
-        //       child: Row(
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: [
-        //           Icon(
-        //             Icons.fullscreen_rounded,
-        //             size: 14,
-        //             color: Colors.white.withOpacity(0.9),
-        //           ),
-        //           const SizedBox(width: 4),
-        //           Text(
-        //             'Expand',
-        //             style: GoogleFonts.inter(
-        //               fontSize: 11,
-        //               fontWeight: FontWeight.w500,
-        //               color: Colors.white.withOpacity(0.9),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
-      ],
+    // AspectRatio 1:2 (height = width/2) gives a wide cinematic frame
+    // that matches the shimmer placeholder spec.
+    return AspectRatio(
+      aspectRatio: 2 / 1,
+      child: VideoPlayerWidget(src: src),
     );
   }
 }
-
-/// Full-screen dialog that hosts the video player for better viewing.
-// class _FullscreenVideoDialog extends StatelessWidget {
 //   final String src;
 //   const _FullscreenVideoDialog({required this.src});
 

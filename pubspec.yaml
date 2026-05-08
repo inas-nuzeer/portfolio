@@ -80,7 +80,9 @@ flutter:
   assets:
     - assets/logos/
     - assets/projects/xplorit/xplorit.mp4
-    - assets/projects/satisfy/satisfy.mp4
+    - assets/projects/satisfy.mp4
+    - assets/projects/hostel_flow.mp4
+    - assets/projects/activity_flow.mp4
     - assets/icons/linkedin.png
     - assets/icons/linkedin_16.png
     - assets/images/hero_Og_1.jpg

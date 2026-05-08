@@ -62,9 +62,13 @@ const List<_ProjectData> _projects = [
     tags: ['Flutter', 'Dart', 'Node.js', 'REST API', 'Provider', 'Mobile'],
     githubUrl: 'https://github.com/inas-nuzeer/book-now',
     mediaItems: [
-      ProjectMediaItem.image(
-        'assets/images/hero_Og_1.png',
-        caption: 'Booking flow',
+      ProjectMediaItem.video(
+        'assets/projects/hostel_flow.mp4',
+        caption: 'Hostel Flow',
+      ),
+      ProjectMediaItem.video(
+        'assets/projects/activity_flow .mp4',
+        caption: 'Activity Flow',
       ),
     ],
     myRole: [
@@ -175,8 +179,8 @@ const List<_ProjectData> _projects = [
     tags: ['Flutter', 'Firebase', 'Firestore', 'fl_chart', 'PDF', 'Mobile'],
     mediaItems: [
       ProjectMediaItem.video(
-        'assets/projects/satisfy/satisfy.mp4',
-        caption: 'Home screen',
+        'assets/projects/satisfy.mp4',
+        caption: 'App Walkthrough',
       ),
     ],
     techStack: {
@@ -233,30 +237,6 @@ const List<_ProjectData> _projects = [
       'End-to-end system design and architecture',
     ],
   ),
-  // _ProjectData(
-  //   category: ProjectCategory.mobile,
-  //   title: 'Portfolio App',
-  //   subtitle: 'Personal portfolio built with Flutter Web',
-  //   role: 'Flutter Developer',
-  //   description:
-  //       'A fully responsive personal portfolio built with Flutter Web. '
-  //       'It showcases projects, skills, and experience with smooth animations, '
-  //       'a glassmorphism design system, and a custom theme. '
-  //       'Deployed on the web with fast load times and cross-browser support.',
-  //   tags: ['Flutter', 'Dart', 'Web'],
-  //   liveUrl: 'https://inas-nuzeer.github.io/portfolio/',
-  //   githubUrl: 'https://github.com/inas-nuzeer/portfolio',
-  //   mediaItems: [
-  //     ProjectMediaItem.image(
-  //       'assets/images/hero_Og_1.png',
-  //       caption: 'Home screen',
-  //     ),
-  //     ProjectMediaItem.image(
-  //       'assets/images/hero_Og_2.png',
-  //       caption: 'About section',
-  //     ),
-  //   ],
-  // ),
   // ── Web ──────────────────────────────────────────────────────────────────────
   _ProjectData(
     category: ProjectCategory.web,

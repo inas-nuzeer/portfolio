@@ -123,165 +123,157 @@ class ProjectDetailPage extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
+          child: ListView(
             padding: EdgeInsets.symmetric(
               horizontal: isMobile ? screenWidth * 0.06 : screenWidth * 0.12,
               vertical: 32,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const _BackButton(),
-                SizedBox(height: screenHeight * 0.05),
+            children: [
+              const _BackButton(),
+              SizedBox(height: screenHeight * 0.05),
 
-                // ── Hero + Media (desktop: two-column; mobile: stacked) ──
-                if (isMobile) ...[
-                  _HeroSection(
-                    title: title,
-                    subtitle: subtitle,
-                    role: role,
-                    liveUrl: liveUrl,
-                    githubUrl: githubUrl,
-                    isMobile: true,
-                  ),
-                  if (mediaItems.isNotEmpty) ...[
-                    SizedBox(height: screenHeight * 0.04),
-                    const _SectionLabel(label: 'Screenshots & Videos'),
-                    const SizedBox(height: 16),
-                    _MediaCarousel(items: mediaItems, isMobile: true),
-                  ],
+              // ── Hero + Media (desktop: two-column; mobile: stacked) ──
+              if (isMobile) ...[
+                _HeroSection(
+                  title: title,
+                  subtitle: subtitle,
+                  role: role,
+                  liveUrl: liveUrl,
+                  githubUrl: githubUrl,
+                  isMobile: true,
+                ),
+                if (mediaItems.isNotEmpty) ...[
                   SizedBox(height: screenHeight * 0.04),
-                ] else ...[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Left: hero info + media carousel
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _HeroSection(
-                              title: title,
-                              subtitle: subtitle,
-                              role: role,
-                              liveUrl: liveUrl,
-                              githubUrl: githubUrl,
-                              isMobile: false,
-                            ),
-                            if (mediaItems.isNotEmpty) ...[
-                              SizedBox(height: screenHeight * 0.04),
-                              const _SectionLabel(
-                                label: 'Screenshots & Videos',
-                              ),
-                              const SizedBox(height: 16),
-                              _MediaCarousel(
-                                items: mediaItems,
-                                isMobile: false,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 60),
-                      // Right: tech stack
-                      Expanded(
-                        flex: 2,
-                        child: techStack.isNotEmpty
-                            ? _TechStackCard(techStack: techStack)
-                            : tags.isNotEmpty
-                            ? _TagsCard(tags: tags)
-                            : const SizedBox.shrink(),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight * 0.06),
+                  const _SectionLabel(label: 'Screenshots & Videos'),
+                  const SizedBox(height: 16),
+                  _MediaCarousel(items: mediaItems, isMobile: true),
                 ],
-
-                // ── Overview ─────────────────────────────────────────────
-                const _SectionLabel(label: 'Overview'),
-                const SizedBox(height: 16),
-                _GlassCard(
-                  child: Text(
-                    description,
-                    style: GoogleFonts.inter(
-                      fontSize: isMobile ? 15 : 17,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white.withOpacity(0.8),
-                      height: 1.8,
+                SizedBox(height: screenHeight * 0.04),
+              ] else ...[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Left: hero info + media carousel
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _HeroSection(
+                            title: title,
+                            subtitle: subtitle,
+                            role: role,
+                            liveUrl: liveUrl,
+                            githubUrl: githubUrl,
+                            isMobile: false,
+                          ),
+                          if (mediaItems.isNotEmpty) ...[
+                            SizedBox(height: screenHeight * 0.04),
+                            const _SectionLabel(label: 'Screenshots & Videos'),
+                            const SizedBox(height: 16),
+                            _MediaCarousel(items: mediaItems, isMobile: false),
+                          ],
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 60),
+                    // Right: tech stack
+                    Expanded(
+                      flex: 2,
+                      child: techStack.isNotEmpty
+                          ? _TechStackCard(techStack: techStack)
+                          : tags.isNotEmpty
+                          ? _TagsCard(tags: tags)
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenHeight * 0.06),
+              ],
+
+              // ── Overview ─────────────────────────────────────────────
+              const _SectionLabel(label: 'Overview'),
+              const SizedBox(height: 16),
+              _GlassCard(
+                child: Text(
+                  description,
+                  style: GoogleFonts.inter(
+                    fontSize: isMobile ? 15 : 17,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white.withOpacity(0.8),
+                    height: 1.8,
                   ),
                 ),
+              ),
 
-                // ── Tech Stack (mobile only — desktop shows in hero row) ─
-                if (isMobile && techStack.isNotEmpty) ...[
-                  SizedBox(height: screenHeight * 0.04),
-                  const _SectionLabel(label: 'Tech Stack'),
-                  const SizedBox(height: 16),
-                  _TechStackCard(techStack: techStack),
-                ] else if (isMobile && tags.isNotEmpty) ...[
-                  SizedBox(height: screenHeight * 0.04),
-                  const _SectionLabel(label: 'Tech Stack'),
-                  const SizedBox(height: 16),
-                  _TagsCard(tags: tags),
-                ],
-
-                // ── Key Features ─────────────────────────────────────────
-                if (keyFeatures.isNotEmpty) ...[
-                  SizedBox(height: screenHeight * 0.04),
-                  const _SectionLabel(label: 'Key Features'),
-                  const SizedBox(height: 16),
-                  _GlassCard(
-                    child: _TwoColumnBulletList(
-                      items: keyFeatures,
-                      isMobile: isMobile,
-                    ),
-                  ),
-                ],
-
-                // ── My Role ──────────────────────────────────────────────
-                if (myRole.isNotEmpty) ...[
-                  SizedBox(height: screenHeight * 0.04),
-                  const _SectionLabel(label: 'My Role'),
-                  const SizedBox(height: 16),
-                  _GlassCard(
-                    child: _BulletList(items: myRole, isMobile: isMobile),
-                  ),
-                ],
-
-                // ── Key Contributions ────────────────────────────────────
-                if (keyContributions.isNotEmpty) ...[
-                  SizedBox(height: screenHeight * 0.04),
-                  const _SectionLabel(label: 'Key Contributions'),
-                  const SizedBox(height: 16),
-                  _GlassCard(
-                    child: _BulletList(
-                      items: keyContributions,
-                      isMobile: isMobile,
-                      accentBullet: true,
-                    ),
-                  ),
-                ],
-
-                // ── Skills Demonstrated ──────────────────────────────────
-                if (skillsDemonstrated.isNotEmpty) ...[
-                  SizedBox(height: screenHeight * 0.04),
-                  const _SectionLabel(label: 'Skills Demonstrated'),
-                  const SizedBox(height: 16),
-                  _GlassCard(
-                    child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: skillsDemonstrated
-                          .map((s) => _SkillPill(label: s))
-                          .toList(),
-                    ),
-                  ),
-                ],
-
-                SizedBox(height: screenHeight * 0.08),
+              // ── Tech Stack (mobile only — desktop shows in hero row) ─
+              if (isMobile && techStack.isNotEmpty) ...[
+                SizedBox(height: screenHeight * 0.04),
+                const _SectionLabel(label: 'Tech Stack'),
+                const SizedBox(height: 16),
+                _TechStackCard(techStack: techStack),
+              ] else if (isMobile && tags.isNotEmpty) ...[
+                SizedBox(height: screenHeight * 0.04),
+                const _SectionLabel(label: 'Tech Stack'),
+                const SizedBox(height: 16),
+                _TagsCard(tags: tags),
               ],
-            ),
+
+              // ── Key Features ─────────────────────────────────────────
+              if (keyFeatures.isNotEmpty) ...[
+                SizedBox(height: screenHeight * 0.04),
+                const _SectionLabel(label: 'Key Features'),
+                const SizedBox(height: 16),
+                _GlassCard(
+                  child: _TwoColumnBulletList(
+                    items: keyFeatures,
+                    isMobile: isMobile,
+                  ),
+                ),
+              ],
+
+              // ── My Role ──────────────────────────────────────────────
+              if (myRole.isNotEmpty) ...[
+                SizedBox(height: screenHeight * 0.04),
+                const _SectionLabel(label: 'My Role'),
+                const SizedBox(height: 16),
+                _GlassCard(
+                  child: _BulletList(items: myRole, isMobile: isMobile),
+                ),
+              ],
+
+              // ── Key Contributions ────────────────────────────────────
+              if (keyContributions.isNotEmpty) ...[
+                SizedBox(height: screenHeight * 0.04),
+                const _SectionLabel(label: 'Key Contributions'),
+                const SizedBox(height: 16),
+                _GlassCard(
+                  child: _BulletList(
+                    items: keyContributions,
+                    isMobile: isMobile,
+                    accentBullet: true,
+                  ),
+                ),
+              ],
+
+              // ── Skills Demonstrated ──────────────────────────────────
+              if (skillsDemonstrated.isNotEmpty) ...[
+                SizedBox(height: screenHeight * 0.04),
+                const _SectionLabel(label: 'Skills Demonstrated'),
+                const SizedBox(height: 16),
+                _GlassCard(
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: skillsDemonstrated
+                        .map((s) => _SkillPill(label: s))
+                        .toList(),
+                  ),
+                ),
+              ],
+
+              SizedBox(height: screenHeight * 0.08),
+            ],
           ),
         ),
       ),
@@ -329,7 +321,8 @@ class _MediaCarouselState extends State<_MediaCarousel> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double slideHeight = widget.isMobile
-        ? screenWidth * 0.56
+        ? screenWidth *
+              0.75 // taller on mobile so video has room
         : screenWidth * 0.45;
     final bool hasCaption =
         widget.items[_currentIndex].caption?.isNotEmpty == true;
@@ -464,12 +457,111 @@ class _ImageSlide extends StatelessWidget {
   }
 }
 
+/// Video slide that shows the video player inline in the carousel.
+/// On mobile, HtmlElementView can have positioning issues inside scrollable
+/// containers, but we show it anyway. User can tap the expand button to view
+/// fullscreen if needed.
 class _VideoSlide extends StatelessWidget {
   final String src;
   const _VideoSlide({required this.src});
 
+  void _openFullscreen(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.92),
+      builder: (_) => _FullscreenVideoDialog(src: src),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) => VideoPlayerWidget(src: src);
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // ── Video player ─────────────────────────────────────────────────
+        VideoPlayerWidget(src: src),
+
+        // ── Expand button (top-left) ─────────────────────────────────────
+        // Positioned(
+        //   top: 8,
+        //   left: 8,
+        //   child: GestureDetector(
+        //     onTap: () => _openFullscreen(context),
+        //     child: Container(
+        //       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        //       decoration: BoxDecoration(
+        //         borderRadius: BorderRadius.circular(8),
+        //         color: Colors.black.withOpacity(0.6),
+        //         border: Border.all(color: Colors.white.withOpacity(0.2)),
+        //       ),
+        //       child: Row(
+        //         mainAxisSize: MainAxisSize.min,
+        //         children: [
+        //           Icon(
+        //             Icons.fullscreen_rounded,
+        //             size: 14,
+        //             color: Colors.white.withOpacity(0.9),
+        //           ),
+        //           const SizedBox(width: 4),
+        //           Text(
+        //             'Expand',
+        //             style: GoogleFonts.inter(
+        //               fontSize: 11,
+        //               fontWeight: FontWeight.w500,
+        //               color: Colors.white.withOpacity(0.9),
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ),
+      ],
+    );
+  }
+}
+
+/// Full-screen dialog that hosts the video player for better viewing.
+class _FullscreenVideoDialog extends StatelessWidget {
+  final String src;
+  const _FullscreenVideoDialog({required this.src});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog.fullscreen(
+      backgroundColor: Colors.black,
+      child: Stack(
+        children: [
+          // ── Video player fills the screen ──────────────────────────────
+          Center(child: VideoPlayerWidget(src: src)),
+
+          // ── Close button ───────────────────────────────────────────────
+          Positioned(
+            top: 16,
+            right: 16,
+            child: SafeArea(
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.15),
+                    border: Border.all(color: Colors.white.withOpacity(0.25)),
+                  ),
+                  child: Icon(
+                    Icons.close_rounded,
+                    color: Colors.white.withOpacity(0.9),
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _ErrorPlaceholder extends StatelessWidget {

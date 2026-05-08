@@ -42,9 +42,9 @@ class _SkillState extends State<Skill> with SingleTickerProviderStateMixin {
       builder: (context, constraints) {
         // Available height — at least one full screen, possibly more if
         // the parent ConstrainedBox gives more room.
-        final double availableHeight = constraints.maxHeight.isFinite
-            ? constraints.maxHeight
-            : screenHeight;
+        // final double availableHeight = constraints.maxHeight.isFinite
+        //     ? constraints.maxHeight
+        //     : screenHeight;
 
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * .1),

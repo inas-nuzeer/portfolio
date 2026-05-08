@@ -60,14 +60,14 @@ const List<_ProjectData> _projects = [
         'and manage hostels and activities, along with a dedicated '
         'host/owner management system.',
     tags: ['Flutter', 'Dart', 'Node.js', 'REST API', 'Provider', 'Mobile'],
-    githubUrl: 'https://github.com/inas-nuzeer/book-now',
+    // githubUrl: 'https://github.com/inas-nuzeer/book-now',
     mediaItems: [
       ProjectMediaItem.video(
         'assets/projects/hostel_flow.mp4',
         caption: 'Hostel Flow',
       ),
       ProjectMediaItem.video(
-        'assets/projects/activity_flow .mp4',
+        'assets/projects/activity_flow.mp4',
         caption: 'Activity Flow',
       ),
     ],
@@ -251,16 +251,16 @@ const List<_ProjectData> _projects = [
     tags: ['Flutter', 'Dart', 'Web'],
     liveUrl: 'https://inas-nuzeer.github.io/portfolio/',
     githubUrl: 'https://github.com/inas-nuzeer/portfolio',
-    mediaItems: [
-      ProjectMediaItem.image(
-        'assets/images/hero_Og_1.png',
-        caption: 'Home screen',
-      ),
-      ProjectMediaItem.image(
-        'assets/images/hero_Og_2.png',
-        caption: 'About section',
-      ),
-    ],
+    // mediaItems: [
+    //   ProjectMediaItem.image(
+    //     'assets/images/hero_Og_1.png',
+    //     caption: 'Home screen',
+    //   ),
+    //   ProjectMediaItem.image(
+    //     'assets/images/hero_Og_2.png',
+    //     caption: 'About section',
+    //   ),
+    // ],
   ),
   _ProjectData(
     category: ProjectCategory.web,

@@ -61,12 +61,16 @@ const List<_ProjectData> _projects = [
         'host/owner management system.',
     tags: ['Flutter', 'Dart', 'Node.js', 'REST API', 'Provider', 'Mobile'],
     githubUrl: 'https://github.com/inas-nuzeer/book-now',
-    mediaItems: [
-      ProjectMediaItem.image(
-        'assets/images/hero_Og_1.png',
-        caption: 'Booking flow',
-      ),
-    ],
+    // mediaItems: [
+    //   ProjectMediaItem.video(
+    //     'assets/projects/booknow/hostel_flow.mp4',
+    //     caption: 'Hostel Flow',
+    //   ),
+    //   ProjectMediaItem.video(
+    //     'assets/projects/booknow/activity_flow .mp4',
+    //     caption: 'Activity Flow',
+    //   ),
+    // ],
     myRole: [
       'Led the Flutter mobile application development, contributing to the majority of the mobile codebase',
       'Built core features including booking flows, UI systems, state management, and API integrations',
@@ -173,6 +177,12 @@ const List<_ProjectData> _projects = [
         'production costs, and invoicing into a single real-time platform, '
         'replacing manual record-keeping with a data-driven solution.',
     tags: ['Flutter', 'Firebase', 'Firestore', 'fl_chart', 'PDF', 'Mobile'],
+    mediaItems: [
+      ProjectMediaItem.video(
+        'assets/projects/satisfy/satisfy.mp4',
+        caption: 'App Walkthrough',
+      ),
+    ],
     techStack: {
       'Mobile': [
         'Flutter (Android & iOS)',

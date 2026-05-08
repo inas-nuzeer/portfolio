@@ -173,6 +173,12 @@ const List<_ProjectData> _projects = [
         'production costs, and invoicing into a single real-time platform, '
         'replacing manual record-keeping with a data-driven solution.',
     tags: ['Flutter', 'Firebase', 'Firestore', 'fl_chart', 'PDF', 'Mobile'],
+    mediaItems: [
+      ProjectMediaItem.video(
+        'assets/projects/satisfy/satisfy.mp4',
+        caption: 'Home screen',
+      ),
+    ],
     techStack: {
       'Mobile': [
         'Flutter (Android & iOS)',

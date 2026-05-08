@@ -134,22 +134,34 @@ class ProjectDetailPage extends StatelessWidget {
                 const _BackButton(),
                 SizedBox(height: screenHeight * 0.05),
 
-                // ── Hero ────────────────────────────────────────────────
-                isMobile
-                    ? _HeroSection(
-                        title: title,
-                        subtitle: subtitle,
-                        role: role,
-                        liveUrl: liveUrl,
-                        githubUrl: githubUrl,
-                        isMobile: true,
-                      )
-                    : Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: _HeroSection(
+                // ── Hero + Media (desktop: two-column; mobile: stacked) ──
+                if (isMobile) ...[
+                  _HeroSection(
+                    title: title,
+                    subtitle: subtitle,
+                    role: role,
+                    liveUrl: liveUrl,
+                    githubUrl: githubUrl,
+                    isMobile: true,
+                  ),
+                  if (mediaItems.isNotEmpty) ...[
+                    SizedBox(height: screenHeight * 0.04),
+                    const _SectionLabel(label: 'Screenshots & Videos'),
+                    const SizedBox(height: 16),
+                    _MediaCarousel(items: mediaItems, isMobile: true),
+                  ],
+                  SizedBox(height: screenHeight * 0.04),
+                ] else ...[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left: hero info + media carousel
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _HeroSection(
                               title: title,
                               subtitle: subtitle,
                               role: role,
@@ -157,24 +169,32 @@ class ProjectDetailPage extends StatelessWidget {
                               githubUrl: githubUrl,
                               isMobile: false,
                             ),
-                          ),
-                          const SizedBox(width: 60),
-                          Expanded(
-                            flex: 2,
-                            child: techStack.isNotEmpty
-                                ? _TechStackCard(techStack: techStack)
-                                : _TagsCard(tags: tags),
-                          ),
-                        ],
+                            if (mediaItems.isNotEmpty) ...[
+                              SizedBox(height: screenHeight * 0.04),
+                              const _SectionLabel(
+                                label: 'Screenshots & Videos',
+                              ),
+                              const SizedBox(height: 16),
+                              _MediaCarousel(
+                                items: mediaItems,
+                                isMobile: false,
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
-
-                SizedBox(height: screenHeight * 0.06),
-
-                // ── Media carousel ───────────────────────────────────────
-                if (mediaItems.isNotEmpty) ...[
-                  const _SectionLabel(label: 'Screenshots & Videos'),
-                  const SizedBox(height: 16),
-                  _MediaCarousel(items: mediaItems, isMobile: isMobile),
+                      const SizedBox(width: 60),
+                      // Right: tech stack
+                      Expanded(
+                        flex: 2,
+                        child: techStack.isNotEmpty
+                            ? _TechStackCard(techStack: techStack)
+                            : tags.isNotEmpty
+                            ? _TagsCard(tags: tags)
+                            : const SizedBox.shrink(),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: screenHeight * 0.06),
                 ],
 
@@ -310,7 +330,7 @@ class _MediaCarouselState extends State<_MediaCarousel> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double slideHeight = widget.isMobile
         ? screenWidth * 0.56
-        : screenWidth * 0.35;
+        : screenWidth * 0.45;
     final bool hasCaption =
         widget.items[_currentIndex].caption?.isNotEmpty == true;
 
@@ -432,14 +452,14 @@ class _ImageSlide extends StatelessWidget {
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
-            errorBuilder: (_, __, ___) => const _ErrorPlaceholder(),
+            errorBuilder: (_, _, _) => const _ErrorPlaceholder(),
           )
         : Image.asset(
             src,
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
-            errorBuilder: (_, __, ___) => const _ErrorPlaceholder(),
+            errorBuilder: (_, _, _) => const _ErrorPlaceholder(),
           );
   }
 }
@@ -691,8 +711,8 @@ class _HeroSection extends StatelessWidget {
             ),
           ),
         ],
-        const SizedBox(height: 36),
-        if (liveUrl != null || githubUrl != null)
+        if (liveUrl != null || githubUrl != null) ...[
+          const SizedBox(height: 28),
           Wrap(
             spacing: 12,
             runSpacing: 12,
@@ -712,6 +732,7 @@ class _HeroSection extends StatelessWidget {
                 ),
             ],
           ),
+        ],
       ],
     );
   }

@@ -1,10 +1,15 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
 // Web-only implementation — registers a <video> element and returns an HtmlElementView.
+// Uses package:web + dart:js_interop (replaces deprecated dart:html).
 
-import 'dart:html' as html;
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'dart:ui_web' as ui_web;
 
 import 'package:flutter/widgets.dart';
+import 'package:web/web.dart' as web;
+
+// Track registered view IDs to avoid duplicate registration errors.
+final Set<String> _registeredVideoViews = {};
 
 Widget buildWebVideoPlayer(String src) {
   return _WebVideoPlayer(src: src);
@@ -24,26 +29,33 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    // Unique ID per instance so multiple videos on the same page don't clash
+    // Unique ID per instance so multiple videos on the same page don't clash.
     _viewId =
         'video-player-${widget.src.hashCode}-${DateTime.now().microsecondsSinceEpoch}';
 
-    ui_web.platformViewRegistry.registerViewFactory(_viewId, (_) {
-      final video = html.VideoElement()
-        ..src = widget.src
-        ..controls = true
-        ..autoplay = false
-        ..style.width = '100%'
-        ..style.height = '100%'
-        ..style.objectFit = 'contain'
-        ..style.background = '#000'
-        ..setAttribute('playsinline', 'true');
-      return video;
-    });
+    if (!_registeredVideoViews.contains(_viewId)) {
+      _registeredVideoViews.add(_viewId);
+      ui_web.platformViewRegistry.registerViewFactory(_viewId, (_) {
+        final video = web.HTMLVideoElement()
+          ..src = widget.src
+          ..controls = true
+          ..autoplay = false
+          ..setAttribute('playsinline', 'true')
+          ..setAttribute('preload', 'metadata');
+
+        video.style
+          ..width = '100%'
+          ..height = '100%'
+          ..objectFit = 'contain'
+          ..background = '#000000';
+
+        return video;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return HtmlElementView(viewType: _viewId);
+    return SizedBox.expand(child: HtmlElementView(viewType: _viewId));
   }
 }

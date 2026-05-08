@@ -193,9 +193,7 @@ class ProjectDetailModal extends StatelessWidget {
                           _ActionButton(
                             label: 'Live Demo',
                             icon: Icons.open_in_new_rounded,
-                            onTap: () {
-                              // TODO: launch(liveUrl!)
-                            },
+                            onTap: () {},
                           ),
                         if (liveUrl != null && githubUrl != null)
                           const SizedBox(width: 12),
@@ -203,9 +201,7 @@ class ProjectDetailModal extends StatelessWidget {
                           _ActionButton(
                             label: 'GitHub',
                             icon: Icons.code_rounded,
-                            onTap: () {
-                              // TODO: launch(githubUrl!)
-                            },
+                            onTap: () {},
                             outlined: true,
                           ),
                       ],

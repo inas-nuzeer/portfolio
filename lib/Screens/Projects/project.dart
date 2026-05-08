@@ -241,26 +241,95 @@ const List<_ProjectData> _projects = [
   _ProjectData(
     category: ProjectCategory.web,
     title: 'Portfolio App',
-    subtitle: 'Personal portfolio built with Flutter Web',
+    subtitle: 'Personal Portfolio built with Flutter Web',
     role: 'Flutter Developer',
     description:
-        'A fully responsive personal portfolio built with Flutter Web. '
-        'It showcases projects, skills, and experience with smooth animations, '
-        'a glassmorphism design system, and a custom theme. '
-        'Deployed on the web with fast load times and cross-browser support.',
-    tags: ['Flutter', 'Dart', 'Web'],
+        'A fully responsive personal portfolio website built entirely with '
+        'Flutter Web, showcasing projects, skills, work experience, and '
+        'education. The app features a custom glassmorphism design system, '
+        'smooth scroll-driven navigation, a typewriter splash screen, '
+        'section-based layout with a floating navbar, and an inline video '
+        'player for project demos. Deployed on GitHub Pages with cross-browser '
+        'support and optimised for both desktop and mobile.',
+    tags: ['Flutter', 'Dart', 'Flutter Web', 'GitHub Pages'],
     liveUrl: 'https://inas-nuzeer.github.io/portfolio/',
     githubUrl: 'https://github.com/inas-nuzeer/portfolio',
-    // mediaItems: [
-    //   ProjectMediaItem.image(
-    //     'assets/images/hero_Og_1.png',
-    //     caption: 'Home screen',
-    //   ),
-    //   ProjectMediaItem.image(
-    //     'assets/images/hero_Og_2.png',
-    //     caption: 'About section',
-    //   ),
-    // ],
+    mediaItems: [
+      ProjectMediaItem.image(
+        'assets/projects/portfolio.png',
+        caption: 'Web Preview',
+      ),
+    ],
+    techStack: {
+      'Framework': ['Flutter Web (Dart)'],
+      'UI & Design': [
+        'Glassmorphism design system',
+        'BackdropFilter blur effects',
+        'Responsive layout (mobile / tablet / desktop)',
+        'Custom painters & animated widgets',
+      ],
+      'Navigation & State': [
+        'Scroll-driven section navigation',
+        'ScrollController with offset tracking',
+        'TabController for Skills & Projects tabs',
+        'AnimatedSwitcher & FadeTransition',
+        'PageRouteBuilder with custom transitions',
+      ],
+      // 'Features': [
+      //   'Typewriter splash screen with cursor blink',
+      //   'Inline HTML5 video player (dart:js_interop)',
+      //   'HtmlElementView platform view integration',
+      //   'CV download (web file download utility)',
+      //   'url_launcher for external links',
+      // ],
+      'Deployment': [
+        'GitHub Pages (flutter build web)',
+        'Custom favicon & PWA manifest',
+        'Cross-browser support',
+      ],
+    },
+    keyFeatures: [
+      'Animated splash screen with typewriter name reveal and loading dots',
+      'Scroll-snapping section navigation (Home, About, Skills, Experience, Projects, Education)',
+      'Floating glassmorphism navbar on desktop; bottom nav bar on mobile',
+      'Skills section with tabbed layout (Flutter, Laravel, Tools) and animated cards',
+      'Projects section with Mobile / Web category tabs and detail pages',
+      'Project detail pages with media carousel (images + inline video)',
+      'Inline HTML5 video player using dart:js_interop and HtmlElementView',
+      'Fullscreen video expand mode for better viewing on mobile',
+      'CV download button with loading state',
+      'Fully responsive — adapts layout for mobile, tablet, and desktop',
+      'Glassmorphism containers with BackdropFilter blur throughout',
+      'Smooth animated transitions between sections and pages',
+    ],
+    myRole: [
+      'Designed and developed the entire portfolio from scratch as a solo project',
+      'Responsible for all UI design decisions, component architecture, and feature implementation',
+      'Built the custom design system including the glassmorphism theme, typography, and color palette',
+      'Implemented all sections: Home, About, Skills, Experience, Projects, and Education',
+      'Integrated native web APIs (HTML5 video) using dart:js_interop for the inline video player',
+      'Deployed the app to GitHub Pages using flutter build web',
+    ],
+    keyContributions: [
+      'Built a scroll-driven navigation system that tracks active section via ScrollController offset',
+      'Designed and implemented a reusable glassmorphism component system (GlassContainer, glass cards)',
+      'Created an animated typewriter splash screen with cursor blink and sequential text reveal',
+      'Developed a media carousel with PageView supporting both images and inline HTML5 video',
+      'Implemented the HTML5 video player using dart:js_interop and ui_web.platformViewRegistry',
+      'Built a tabbed Skills section with animated card layout that adapts between mobile and desktop grids',
+      'Structured project data as a typed model (_ProjectData) with rich detail pages and tech stack cards',
+      'Implemented CV download functionality with a web-specific utility using dart:html/js interop',
+    ],
+    skillsDemonstrated: [
+      'Flutter Web development & deployment',
+      'Custom UI design (glassmorphism, theming, typography)',
+      'Responsive layout design (mobile / tablet / desktop)',
+      'Scroll-driven navigation & animation',
+      'Platform view integration (HtmlElementView, dart:js_interop)',
+      'Component-based architecture & reusable widget design',
+      'State management with StatefulWidget & controllers',
+      'GitHub Pages deployment workflow',
+    ],
   ),
   _ProjectData(
     category: ProjectCategory.web,
@@ -268,6 +337,12 @@ const List<_ProjectData> _projects = [
     subtitle: 'Corporate Website & LMS Platform',
     role: 'Full-Stack Developer',
     liveUrl: 'https://old.oneaccess.lk/',
+    mediaItems: [
+      ProjectMediaItem.image(
+        'assets/projects/oneaccess.png',
+        caption: 'Web Preview',
+      ),
+    ],
     description:
         'OneAccess Technologies is a full-stack web platform developed for an '
         'IT solutions and training company. It combines a corporate website '
@@ -334,6 +409,12 @@ const List<_ProjectData> _projects = [
     subtitle: 'Product Showcase & Admin CMS Platform',
     role: 'Full-Stack Developer',
     liveUrl: 'https://anrbaby.lk/',
+    mediaItems: [
+      ProjectMediaItem.image(
+        'assets/projects/anrbaby.png',
+        caption: 'Web Preview',
+      ),
+    ],
     description:
         'A&R Baby Collection is a full-stack web platform designed for a '
         'wholesale and retail baby products business. It serves as a product '

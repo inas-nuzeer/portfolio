@@ -1,6 +1,12 @@
 // Web-only implementation — registers a <video> element and returns an HtmlElementView.
 // Uses dart:js_interop (Dart 3+) to create the DOM element without needing
 // package:web or the deprecated dart:html.
+//
+// Asset URL resolution:
+//   ui_web.assetManager.getAssetUrl(path) returns the correct absolute URL
+//   for both debug (localhost) and production (GitHub Pages sub-path).
+//   This fixes the 404 errors that occur in production when the video src
+//   is a bare relative path like "assets/projects/foo.mp4".
 
 // ignore_for_file: avoid_web_libraries_in_flutter
 
@@ -59,10 +65,14 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
     if (!_registeredVideoViews.contains(_viewId)) {
       _registeredVideoViews.add(_viewId);
 
-      final capturedSrc = widget.src;
+      // Resolve the asset to an absolute URL so it works on GitHub Pages
+      // (where the app is served under a sub-path like /portfolio/).
+      // getAssetUrl handles both debug and release correctly.
+      final String resolvedSrc = ui_web.assetManager.getAssetUrl(widget.src);
+
       ui_web.platformViewRegistry.registerViewFactory(_viewId, (_) {
         final video = _createElement('video');
-        video.src = capturedSrc;
+        video.src = resolvedSrc;
         video.controls = true;
         video.autoplay = false;
         video.setAttribute('playsinline', 'true');

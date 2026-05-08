@@ -116,9 +116,10 @@ class ProjectDetailPage extends StatelessWidget {
       body: DecoratedBox(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: isMobile
-                ? const AssetImage('assets/images/bg_image_mobile.png')
-                : const AssetImage('assets/images/bg_image.png'),
+            image: const AssetImage('assets/images/bg_image2.png'),
+            //  isMobile
+            //     ? const AssetImage('assets/images/bg_image_mobile.png')
+            //     : const AssetImage('assets/images/bg_image.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -320,19 +321,26 @@ class _MediaCarouselState extends State<_MediaCarousel> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double slideHeight = widget.isMobile
-        ? screenWidth *
-              0.75 // taller on mobile so video has room
-        : screenWidth * 0.45;
     final bool hasCaption =
         widget.items[_currentIndex].caption?.isNotEmpty == true;
+    final bool currentIsVideo =
+        widget.items[_currentIndex].type == MediaType.video;
+
+    // Videos need a fixed height; images size to their natural aspect ratio.
+    // On desktop the carousel sits in a constrained column so we keep a fixed
+    // height there too — only on mobile do we let images be natural height.
+    final double? fixedHeight = currentIsVideo || !widget.isMobile
+        ? (widget.isMobile ? screenWidth * 0.75 : screenWidth * 0.45 * 0.5)
+        : null; // null → wrap to image height on mobile
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-        child: Container(
-          height: widget.isMobile ? slideHeight : slideHeight * .5,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: fixedHeight,
           width: widget.isMobile ? double.infinity : screenWidth * .35,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
@@ -340,50 +348,17 @@ class _MediaCarouselState extends State<_MediaCarousel> {
             border: Border.all(color: Colors.white.withOpacity(0.12), width: 1),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: Stack(
-                  children: [
-                    PageView.builder(
-                      controller: _pageController,
-                      itemCount: widget.items.length,
-                      onPageChanged: (i) => setState(() => _currentIndex = i),
-                      itemBuilder: (_, i) => _MediaSlide(item: widget.items[i]),
-                    ),
-                    if (_currentIndex > 0)
-                      Positioned(
-                        left: 12,
-                        top: 0,
-                        bottom: 0,
-                        child: Center(
-                          child: _ArrowButton(
-                            icon: Icons.chevron_left_rounded,
-                            onTap: () => _goTo(_currentIndex - 1),
-                          ),
-                        ),
-                      ),
-                    if (_currentIndex < widget.items.length - 1)
-                      Positioned(
-                        right: 12,
-                        top: 0,
-                        bottom: 0,
-                        child: Center(
-                          child: _ArrowButton(
-                            icon: Icons.chevron_right_rounded,
-                            onTap: () => _goTo(_currentIndex + 1),
-                          ),
-                        ),
-                      ),
-                    Positioned(
-                      top: 12,
-                      right: 12,
-                      child: _MediaBadge(
-                        type: widget.items[_currentIndex].type,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // ── Slide area ─────────────────────────────────────────────
+              if (fixedHeight != null)
+                // Fixed height mode (video or desktop): PageView fills space
+                Expanded(child: _slideStack())
+              else
+                // Natural height mode (image on mobile): stack sizes to image
+                _slideStack(),
+
+              // ── Caption + dots ─────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -417,6 +392,67 @@ class _MediaCarouselState extends State<_MediaCarousel> {
       ),
     );
   }
+
+  Widget _slideStack() {
+    final bool fixedMode =
+        widget.items[_currentIndex].type == MediaType.video || !widget.isMobile;
+
+    // In fixed mode PageView fills the Expanded parent.
+    // In natural mode we show only the current slide (no PageView scroll)
+    // because PageView requires a fixed height.
+    if (fixedMode) {
+      return PageView.builder(
+        controller: _pageController,
+        itemCount: widget.items.length,
+        onPageChanged: (i) => setState(() => _currentIndex = i),
+        itemBuilder: (_, i) => _MediaSlide(item: widget.items[i]),
+      );
+    }
+
+    // Natural-height mode: show current image + overlay arrows/badge.
+    // Swipe is handled by a GestureDetector since PageView needs fixed height.
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity == null) return;
+        if (details.primaryVelocity! < -200) _goTo(_currentIndex + 1);
+        if (details.primaryVelocity! > 200) _goTo(_currentIndex - 1);
+      },
+      child: Stack(
+        children: [
+          _MediaSlide(item: widget.items[_currentIndex]),
+          if (_currentIndex > 0)
+            Positioned(
+              left: 12,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: _ArrowButton(
+                  icon: Icons.chevron_left_rounded,
+                  onTap: () => _goTo(_currentIndex - 1),
+                ),
+              ),
+            ),
+          if (_currentIndex < widget.items.length - 1)
+            Positioned(
+              right: 12,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: _ArrowButton(
+                  icon: Icons.chevron_right_rounded,
+                  onTap: () => _goTo(_currentIndex + 1),
+                ),
+              ),
+            ),
+          Positioned(
+            top: 12,
+            right: 12,
+            child: _MediaBadge(type: widget.items[_currentIndex].type),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 // ── Slides ────────────────────────────────────────────────────────────────────
@@ -439,19 +475,19 @@ class _ImageSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // fit: BoxFit.fitWidth — fills the full width and sizes height naturally.
+    // No explicit height so the container wraps to the image's aspect ratio.
     return _isNetwork
         ? Image.network(
             src,
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
             width: double.infinity,
-            height: double.infinity,
             errorBuilder: (_, _, _) => const _ErrorPlaceholder(),
           )
         : Image.asset(
             src,
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
             width: double.infinity,
-            height: double.infinity,
             errorBuilder: (_, _, _) => const _ErrorPlaceholder(),
           );
   }

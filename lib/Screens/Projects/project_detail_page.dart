@@ -465,13 +465,13 @@ class _VideoSlide extends StatelessWidget {
   final String src;
   const _VideoSlide({required this.src});
 
-  void _openFullscreen(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      barrierColor: Colors.black.withOpacity(0.92),
-      builder: (_) => _FullscreenVideoDialog(src: src),
-    );
-  }
+  // void _openFullscreen(BuildContext context) {
+  //   showDialog<void>(
+  //     context: context,
+  //     barrierColor: Colors.black.withOpacity(0.92),
+  //     builder: (_) => _FullscreenVideoDialog(src: src),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -521,48 +521,48 @@ class _VideoSlide extends StatelessWidget {
 }
 
 /// Full-screen dialog that hosts the video player for better viewing.
-class _FullscreenVideoDialog extends StatelessWidget {
-  final String src;
-  const _FullscreenVideoDialog({required this.src});
+// class _FullscreenVideoDialog extends StatelessWidget {
+//   final String src;
+//   const _FullscreenVideoDialog({required this.src});
 
-  @override
-  Widget build(BuildContext context) {
-    return Dialog.fullscreen(
-      backgroundColor: Colors.black,
-      child: Stack(
-        children: [
-          // ── Video player fills the screen ──────────────────────────────
-          Center(child: VideoPlayerWidget(src: src)),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Dialog.fullscreen(
+//       backgroundColor: Colors.black,
+//       child: Stack(
+//         children: [
+//           // ── Video player fills the screen ──────────────────────────────
+//           Center(child: VideoPlayerWidget(src: src)),
 
-          // ── Close button ───────────────────────────────────────────────
-          Positioned(
-            top: 16,
-            right: 16,
-            child: SafeArea(
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.15),
-                    border: Border.all(color: Colors.white.withOpacity(0.25)),
-                  ),
-                  child: Icon(
-                    Icons.close_rounded,
-                    color: Colors.white.withOpacity(0.9),
-                    size: 20,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//           // ── Close button ───────────────────────────────────────────────
+//           Positioned(
+//             top: 16,
+//             right: 16,
+//             child: SafeArea(
+//               child: GestureDetector(
+//                 onTap: () => Navigator.of(context).pop(),
+//                 child: Container(
+//                   width: 40,
+//                   height: 40,
+//                   decoration: BoxDecoration(
+//                     shape: BoxShape.circle,
+//                     color: Colors.white.withOpacity(0.15),
+//                     border: Border.all(color: Colors.white.withOpacity(0.25)),
+//                   ),
+//                   child: Icon(
+//                     Icons.close_rounded,
+//                     color: Colors.white.withOpacity(0.9),
+//                     size: 20,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class _ErrorPlaceholder extends StatelessWidget {
   const _ErrorPlaceholder();

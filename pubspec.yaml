@@ -96,6 +96,9 @@ flutter:
     - assets/images/bg_image_mobile.png
     - assets/images/bg_image2.png
     - assets/files/Inas-Nuzeer-Cv.pdf
+    - assets/files/Inas-Nuzeer-Degree.jpg
+    - assets/files/Inas-Nuzeer-Transcript.jpg
+    - assets/files/FYP-Certificate.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

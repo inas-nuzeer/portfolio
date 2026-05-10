@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'cv_downloader_web.dart' if (dart.library.io) 'cv_downloader_io.dart';
 
 Future<void> downloadCv() async {
-  const String assetPath = 'assets/files/Inas-Nuzeer-Cv.pdf';
+  const String assetPath = 'assets/files/Inas_Nuzeer_Resume.pdf';
+  // const String assetPath = 'assets/files/Inas-Nuzeer-Cv.pdf';
   const String fileName = 'Inas-Nuzeer-Cv.pdf';
 
   try {

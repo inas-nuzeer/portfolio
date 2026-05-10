@@ -13,6 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool _isHoveringOnLink = false;
+  bool _isHoveringOnGithub = false;
   bool _isLaunchingLink = false;
 
   Future<void> _launchURL(String url) async {
@@ -118,6 +119,51 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ],
+                  const SizedBox(height: 30),
+
+                  _animatedCard(
+                    delay: 520.ms,
+                    child: MouseRegion(
+                      onEnter: (_) =>
+                          setState(() => _isHoveringOnGithub = true),
+                      onExit: (_) =>
+                          setState(() => _isHoveringOnGithub = false),
+                      child: InkWell(
+                        onTap: () =>
+                            _launchURL('https://www.github.com/inas-nuzeer'),
+                        child: Row(
+                          children: [
+                            if (_isLaunchingLink)
+                              const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Color(0xFFfeb800),
+                                ),
+                              )
+                            else
+                              Image.asset(
+                                'assets/icons/github-24.png',
+                                width: 20,
+                                height: 20,
+                              ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'github.com/inas-nuzeer',
+                              style: TextStyle(
+                                color: _isHoveringOnGithub
+                                    ? const Color(0xFFfeb800)
+                                    : Colors.white,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -201,7 +247,7 @@ class _HomeState extends State<Home> {
             onExit: (_) => setState(() => _isHoveringOnLink = false),
             child: InkWell(
               onTap: () => _launchURL(
-                'https://www.linkedin.com/in/inas-nuzeer-22b709202?utm_sourse=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+                'https://www.linkedin.com/in/inas-nuzeer-22b709202/',
               ),
               child: Row(
                 children: [

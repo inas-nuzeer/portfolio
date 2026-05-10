@@ -88,6 +88,7 @@ flutter:
     - assets/projects/activity_flow.mp4
     - assets/icons/linkedin.png
     - assets/icons/linkedin_16.png
+    - assets/icons/github-24.png
     - assets/images/hero_Og_1.jpg
     - assets/images/hero_Og_1.png
     - assets/images/hero_Og_2.jpg
@@ -96,6 +97,7 @@ flutter:
     - assets/images/bg_image_mobile.png
     - assets/images/bg_image2.png
     - assets/files/Inas-Nuzeer-Cv.pdf
+    - assets/files/Inas_Nuzeer_Resume.pdf
     - assets/files/Inas-Nuzeer-Degree.jpg
     - assets/files/Inas-Nuzeer-Transcript.jpg
     - assets/files/FYP-Certificate.jpg

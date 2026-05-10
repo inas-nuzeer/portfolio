@@ -106,7 +106,6 @@ class _HomeState extends State<Home> {
                         _personalData1(isMobile),
                         const SizedBox(height: 10),
                         _personalData2(isMobile),
-                        SizedBox(height: screenHeight * .12),
                       ],
                     ),
                   ] else ...[
@@ -119,8 +118,7 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ],
-                  const SizedBox(height: 30),
-
+                  SizedBox(height: isMobile ? 10 : 30),
                   _animatedCard(
                     delay: 520.ms,
                     child: MouseRegion(
@@ -164,6 +162,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                  if (isMobile) ...[SizedBox(height: screenHeight * .12)],
                 ],
               ),
             ),

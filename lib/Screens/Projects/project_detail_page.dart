@@ -2,8 +2,11 @@
 
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:inas_portfolio/Widgets/video_player_web.dart'
+    if (dart.library.io) 'package:inas_portfolio/Widgets/video_player_stub.dart';
 import 'package:inas_portfolio/Widgets/video_player_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -297,20 +300,57 @@ class _MediaCarouselState extends State<_MediaCarousel> {
   late final PageController _pageController;
   int _currentIndex = 0;
 
+  // Stable control IDs for each video slide — used to pause/hide the DOM
+  // element when the slide is not active (fixes the mobile scroll ghost bug).
+  late final List<String?> _controlIds;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+
+    // Assign a stable controlId to every video item; images get null.
+    final ts = DateTime.now().microsecondsSinceEpoch;
+    _controlIds = List.generate(widget.items.length, (i) {
+      final item = widget.items[i];
+      return item.type == MediaType.video ? 'vid-$ts-$i' : null;
+    });
   }
 
   @override
   void dispose() {
+    // Pause all videos when the carousel is disposed.
+    if (kIsWeb) {
+      for (final id in _controlIds) {
+        if (id != null) pauseAndHideVideo(id);
+      }
+    }
     _pageController.dispose();
     super.dispose();
   }
 
   void _goTo(int index) {
     if (index < 0 || index >= widget.items.length) return;
+
+    // Pause + hide the video that is leaving.
+    if (kIsWeb) {
+      final leavingId = _controlIds[_currentIndex];
+      if (leavingId != null) pauseAndHideVideo(leavingId);
+    }
+
+    setState(() => _currentIndex = index);
+
+    // Show the video that is entering (does NOT auto-play).
+    if (kIsWeb) {
+      final enteringId = _controlIds[index];
+      if (enteringId != null) {
+        // Small delay so the HtmlElementView has time to mount.
+        Future.delayed(const Duration(milliseconds: 50), () {
+          showVideo(enteringId);
+        });
+      }
+    }
+
     _pageController.animateToPage(
       index,
       duration: const Duration(milliseconds: 350),
@@ -401,8 +441,22 @@ class _MediaCarouselState extends State<_MediaCarousel> {
       return PageView.builder(
         controller: _pageController,
         itemCount: widget.items.length,
-        onPageChanged: (i) => setState(() => _currentIndex = i),
-        itemBuilder: (_, i) => _MediaSlide(item: widget.items[i]),
+        onPageChanged: (i) {
+          // Pause the video leaving, show the one entering.
+          if (kIsWeb) {
+            final leavingId = _controlIds[_currentIndex];
+            if (leavingId != null) pauseAndHideVideo(leavingId);
+            final enteringId = _controlIds[i];
+            if (enteringId != null) {
+              Future.delayed(const Duration(milliseconds: 50), () {
+                showVideo(enteringId);
+              });
+            }
+          }
+          setState(() => _currentIndex = i);
+        },
+        itemBuilder: (_, i) =>
+            _MediaSlide(item: widget.items[i], controlId: _controlIds[i]),
       );
     }
 
@@ -415,7 +469,10 @@ class _MediaCarouselState extends State<_MediaCarousel> {
       },
       child: Stack(
         children: [
-          _MediaSlide(item: widget.items[_currentIndex]),
+          _MediaSlide(
+            item: widget.items[_currentIndex],
+            controlId: _controlIds[_currentIndex],
+          ),
           if (_currentIndex > 0)
             Positioned(
               left: 12,
@@ -455,12 +512,13 @@ class _MediaCarouselState extends State<_MediaCarousel> {
 
 class _MediaSlide extends StatelessWidget {
   final ProjectMediaItem item;
-  const _MediaSlide({required this.item});
+  final String? controlId;
+  const _MediaSlide({required this.item, this.controlId});
 
   @override
   Widget build(BuildContext context) => item.type == MediaType.image
       ? _ImageSlide(src: item.src)
-      : _VideoSlide(src: item.src);
+      : _VideoSlide(src: item.src, controlId: controlId);
 }
 
 class _ImageSlide extends StatelessWidget {
@@ -493,17 +551,20 @@ class _ImageSlide extends StatelessWidget {
 /// properly bounded. The HtmlElementView is wrapped in a div with
 /// overflow:hidden applied via JS so it respects the container boundary
 /// on mobile browsers (Flutter's ClipRRect has no effect on platform views).
+///
+/// [controlId] is passed to VideoPlayerWidget so the carousel can call
+/// pauseAndHideVideo() when this slide becomes inactive, preventing the
+/// DOM element from bleeding outside its bounds during scroll.
 class _VideoSlide extends StatelessWidget {
   final String src;
-  const _VideoSlide({required this.src});
+  final String? controlId;
+  const _VideoSlide({required this.src, this.controlId});
 
   @override
   Widget build(BuildContext context) {
-    // AspectRatio 1:2 (height = width/2) gives a wide cinematic frame
-    // that matches the shimmer placeholder spec.
     return AspectRatio(
       aspectRatio: 2 / 1,
-      child: VideoPlayerWidget(src: src),
+      child: VideoPlayerWidget(src: src, controlId: controlId),
     );
   }
 }

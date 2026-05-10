@@ -11,15 +11,21 @@ import 'video_player_web.dart' if (dart.library.io) 'video_player_stub.dart';
 /// Drop-in video player.
 /// - Web  → native <video> element via HtmlElementView (no extra package)
 /// - Other → "Watch Video" button that opens the URL in the browser
+///
+/// [controlId] is an optional stable identifier used to pause/hide the DOM
+/// element when the slide containing this video becomes inactive. Pass a
+/// unique string per video instance and call [pauseAndHideVideo] /
+/// [showVideo] from the carousel when the active slide changes.
 class VideoPlayerWidget extends StatelessWidget {
   final String src;
+  final String? controlId;
 
-  const VideoPlayerWidget({super.key, required this.src});
+  const VideoPlayerWidget({super.key, required this.src, this.controlId});
 
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      return buildWebVideoPlayer(src);
+      return buildWebVideoPlayer(src, controlId: controlId);
     }
     return _FallbackPlayer(src: src);
   }

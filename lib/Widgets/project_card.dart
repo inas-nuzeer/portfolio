@@ -99,34 +99,65 @@ class ProjectCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      title,
-                      style: GoogleFonts.poppins(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                        height: 1.2,
-                      ),
+                  Expanded(
+                    flex: 3,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  title,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              // Subtitle
+                              Text(
+                                subtitle,
+                                style: GoogleFonts.inter(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white.withOpacity(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: Colors.white.withOpacity(0.4),
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.arrow_right_rounded,
+                              size: 30,
+                              color: Colors.white.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-
-                  // Subtitle
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.inter(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white.withOpacity(0.6),
-                    ),
-                  ),
-
-                  const SizedBox(height: 40),
 
                   // Tags — single row, overflow shown as +N badge
-                  if (tags.isNotEmpty) _TagRow(tags: tags),
+                  if (tags.isNotEmpty)
+                    Expanded(flex: 1, child: _TagRow(tags: tags)),
                 ],
               ),
             ),
@@ -177,7 +208,7 @@ class _TagRow extends StatelessWidget {
   Widget build(BuildContext context) {
     const int maxVisible = 3;
     final visible = tags.take(maxVisible).toList();
-    final overflow = tags.length - visible.length;
+    // final overflow = tags.length - visible.length;
 
     return SizedBox(
       width: double.infinity,

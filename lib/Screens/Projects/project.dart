@@ -698,7 +698,7 @@ class _ProjectGrid extends StatelessWidget {
     } else {
       return GridView.count(
         crossAxisCount: 3,
-        childAspectRatio: 1.5,
+        childAspectRatio: 2.2,
         crossAxisSpacing: 20,
         mainAxisSpacing: 20,
         shrinkWrap: true,

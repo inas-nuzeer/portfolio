@@ -99,13 +99,16 @@ class ProjectCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      height: 1.2,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        height: 1.2,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -122,16 +125,8 @@ class ProjectCard extends StatelessWidget {
 
                   const SizedBox(height: 40),
 
-                  // Tags
-                  if (tags.isNotEmpty)
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: tags
-                          .take(3)
-                          .map((tag) => _Tag(label: tag))
-                          .toList(),
-                    ),
+                  // Tags — single row, overflow shown as +N badge
+                  if (tags.isNotEmpty) _TagRow(tags: tags),
                 ],
               ),
             ),
@@ -149,20 +144,55 @@ class _Tag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      // width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
         color: Colors.white.withOpacity(0.08),
       ),
-      child: Text(
-        label,
-        style: GoogleFonts.inter(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: Colors.white.withOpacity(0.75),
-          letterSpacing: 0.5,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: Colors.white.withOpacity(0.75),
+            letterSpacing: 0.5,
+          ),
         ),
+      ),
+    );
+  }
+}
+
+// ── Single-row tag list: first 3 tags + +N badge ─────────────────────────────
+
+class _TagRow extends StatelessWidget {
+  final List<String> tags;
+  const _TagRow({required this.tags});
+
+  @override
+  Widget build(BuildContext context) {
+    const int maxVisible = 3;
+    final visible = tags.take(maxVisible).toList();
+    final overflow = tags.length - visible.length;
+
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        children: [
+          ...visible.asMap().entries.map((e) {
+            final isLast = e.key == visible.length - 1;
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(right: (!isLast) ? 8.0 : 0.0),
+                child: _Tag(label: e.value),
+              ),
+            );
+          }),
+        ],
       ),
     );
   }

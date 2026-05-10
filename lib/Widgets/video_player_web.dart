@@ -1,16 +1,18 @@
 // Web-only implementation — registers a <video> element inside a wrapper <div>
 // and returns an HtmlElementView.
 //
-// KEY MOBILE FIX:
+// MOBILE SCROLL FIX:
 // HtmlElementView platform views are rendered directly in the browser DOM and
 // completely ignore Flutter's scroll/clip boundaries. When Flutter scrolls its
 // canvas the <video> element stays at its original DOM position, causing the
 // ghost-stacking bug visible on mobile browsers.
 //
-// Solution: expose JS pause() + visibility control so the carousel can
-// hide/pause the video the moment it is no longer the active slide.
-// A hidden (visibility:hidden) element takes up no visual space in the DOM,
-// so it cannot bleed outside its container during scroll.
+// Solution:
+// 1. The wrapper div uses position:absolute + clip-path:inset(0) + contain:strict
+//    so the browser itself clips the video to its box.
+// 2. All videos start hidden (display:none). Only the active slide's video is
+//    shown (display:block). This means off-screen videos have zero DOM presence.
+// 3. pauseAndHideVideo / showVideo let the carousel toggle visibility.
 
 // ignore_for_file: avoid_web_libraries_in_flutter
 
@@ -49,7 +51,11 @@ extension _StyleExt on JSObject {
   external set overflow(String value);
   external set borderRadius(String value);
   external set display(String value);
-  external set visibility(String value);
+  external set contain(String value);
+  external set clipPath(String value);
+  external set maxWidth(String value);
+  external set maxHeight(String value);
+  external set boxSizing(String value);
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -59,22 +65,20 @@ Widget buildWebVideoPlayer(String src, {String? controlId}) {
 }
 
 /// Pause the video and hide the DOM element for the given [controlId].
-/// Call this whenever the slide containing this video becomes inactive.
+/// Uses display:none so the element has zero visual presence — it cannot
+/// bleed outside its container during scroll.
 void pauseAndHideVideo(String controlId) {
-  final wrapper = _getElementById('wrapper-$controlId');
-  if (wrapper == null) return;
-  wrapper.style.visibility = 'hidden';
-
   final video = _getElementById('video-$controlId');
-  if (video == null) return;
-  video.pause();
+  if (video != null) video.pause();
+
+  final wrapper = _getElementById('wrapper-$controlId');
+  if (wrapper != null) wrapper.style.display = 'none';
 }
 
 /// Make the video DOM element visible again (does NOT auto-play).
 void showVideo(String controlId) {
   final wrapper = _getElementById('wrapper-$controlId');
-  if (wrapper == null) return;
-  wrapper.style.visibility = 'visible';
+  if (wrapper != null) wrapper.style.display = 'block';
 }
 
 // ── Widget ────────────────────────────────────────────────────────────────────
@@ -92,6 +96,7 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
   late final String _viewId;
   late final String _wrapperId;
   late final String _videoId;
+  late final bool _isFirstSlide;
 
   @override
   void initState() {
@@ -102,6 +107,11 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
     _wrapperId = 'wrapper-${widget.controlId ?? uid}';
     _videoId = 'video-${widget.controlId ?? uid}';
 
+    // The first slide (controlId ends in '-0') starts visible; all others
+    // start hidden so they can't bleed during the initial render.
+    _isFirstSlide =
+        widget.controlId == null || widget.controlId!.endsWith('-0');
+
     if (!_registeredVideoViews.contains(_viewId)) {
       _registeredVideoViews.add(_viewId);
 
@@ -109,6 +119,9 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
 
       ui_web.platformViewRegistry.registerViewFactory(_viewId, (_) {
         // ── Wrapper div ─────────────────────────────────────────────────
+        // overflow:hidden + contain:strict clips the video to this box even
+        // on mobile browsers where Flutter's ClipRRect has no effect on
+        // platform views.
         final wrapper = _createElement('div');
         wrapper.id = _wrapperId;
         wrapper.style.width = '100%';
@@ -116,8 +129,11 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
         wrapper.style.overflow = 'hidden';
         wrapper.style.borderRadius = '16px';
         wrapper.style.background = '#000000';
-        wrapper.style.display = 'flex';
-        wrapper.style.visibility = 'visible';
+        wrapper.style.contain = 'strict';
+        wrapper.style.clipPath = 'inset(0 round 16px)';
+        wrapper.style.boxSizing = 'border-box';
+        // Non-first slides start hidden to prevent scroll bleed.
+        wrapper.style.display = _isFirstSlide ? 'block' : 'none';
 
         // ── Video element ───────────────────────────────────────────────
         final video = _createElement('video');
@@ -127,12 +143,16 @@ class _WebVideoPlayerState extends State<_WebVideoPlayer> {
         video.autoplay = false;
         video.setAttribute('playsinline', 'true');
         video.setAttribute('preload', 'metadata');
+        video.setAttribute('webkit-playsinline', 'true');
 
         video.style.width = '100%';
         video.style.height = '100%';
         video.style.objectFit = 'contain';
         video.style.background = '#000000';
-        video.style.borderRadius = '16px';
+        video.style.display = 'block';
+        video.style.maxWidth = '100%';
+        video.style.maxHeight = '100%';
+        video.style.boxSizing = 'border-box';
 
         wrapper.appendChild(video);
         return wrapper;

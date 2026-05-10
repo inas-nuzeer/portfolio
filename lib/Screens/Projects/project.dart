@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inas_portfolio/Screens/Projects/project_detail_page.dart';
@@ -660,28 +661,51 @@ class _ProjectGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // if (isMobile) {
+    //   return Column(
+    //     children: projects
+    //         .map(
+    //           (p) => Padding(
+    //             padding: const EdgeInsets.only(bottom: 16),
+    //             child: _buildCard(p),
+    //           ),
+    //         )
+    //         .toList(),
+    //   );
+    // }
+
     if (isMobile) {
-      return Column(
-        children: projects
-            .map(
-              (p) => Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: _buildCard(p),
-              ),
-            )
-            .toList(),
+      return CarouselSlider(
+        options: CarouselOptions(
+          height: 200, // Adjust based on your card height
+          viewportFraction: .90, // Shows ~3 items (1/3 of screen width each)
+          enableInfiniteScroll: false, // Set to true if you want looping
+          enlargeCenterPage: false, // Keep all items same size
+          scrollDirection: Axis.horizontal,
+          initialPage: 0,
+          autoPlay: true, // Set to true if you want auto-scrolling
+          padEnds: true, // Adds padding at the ends
+        ),
+        items: projects.map((p) {
+          return Container(
+            margin: const EdgeInsets.symmetric(
+              horizontal: 4,
+            ), // Replaces spacing
+            child: _buildCard(p),
+          );
+        }).toList(),
+      );
+    } else {
+      return GridView.count(
+        crossAxisCount: 3,
+        childAspectRatio: 1.5,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 20,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: projects.map((p) => _buildCard(p)).toList(),
       );
     }
-
-    return GridView.count(
-      crossAxisCount: 3,
-      childAspectRatio: 1.5,
-      crossAxisSpacing: 20,
-      mainAxisSpacing: 20,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: projects.map((p) => _buildCard(p)).toList(),
-    );
   }
 
   Widget _buildCard(_ProjectData p) {

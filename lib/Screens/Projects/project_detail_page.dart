@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -28,7 +29,7 @@ class ProjectMediaItem {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-class ProjectDetailPage extends StatelessWidget {
+class ProjectDetailPage extends StatefulWidget {
   final String title;
   final String subtitle;
   final String role;
@@ -109,6 +110,45 @@ class ProjectDetailPage extends StatelessWidget {
   }
 
   @override
+  State<ProjectDetailPage> createState() => _ProjectDetailPageState();
+}
+
+class _ProjectDetailPageState extends State<ProjectDetailPage> {
+  late final ScrollController _scrollController;
+
+  // Notifier that the carousel listens to: true = scrolling (hide videos),
+  // false = idle (show active video). This prevents HtmlElementView elements
+  // from bleeding outside their containers during scroll on mobile browsers.
+  final ValueNotifier<bool> _isScrolling = ValueNotifier(false);
+
+  Timer? _scrollStopTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    if (kIsWeb) {
+      _scrollController.addListener(_onScroll);
+    }
+  }
+
+  void _onScroll() {
+    if (!_isScrolling.value) _isScrolling.value = true;
+    _scrollStopTimer?.cancel();
+    _scrollStopTimer = Timer(const Duration(milliseconds: 150), () {
+      if (mounted) _isScrolling.value = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollStopTimer?.cancel();
+    _scrollController.dispose();
+    _isScrolling.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -128,6 +168,7 @@ class ProjectDetailPage extends StatelessWidget {
         ),
         child: SafeArea(
           child: ListView(
+            controller: _scrollController,
             padding: EdgeInsets.symmetric(
               horizontal: isMobile ? screenWidth * 0.06 : screenWidth * 0.12,
               vertical: 32,
@@ -139,18 +180,22 @@ class ProjectDetailPage extends StatelessWidget {
               // ── Hero + Media (desktop: two-column; mobile: stacked) ──
               if (isMobile) ...[
                 _HeroSection(
-                  title: title,
-                  subtitle: subtitle,
-                  role: role,
-                  liveUrl: liveUrl,
-                  githubUrl: githubUrl,
+                  title: widget.title,
+                  subtitle: widget.subtitle,
+                  role: widget.role,
+                  liveUrl: widget.liveUrl,
+                  githubUrl: widget.githubUrl,
                   isMobile: true,
                 ),
-                if (mediaItems.isNotEmpty) ...[
+                if (widget.mediaItems.isNotEmpty) ...[
                   SizedBox(height: screenHeight * 0.04),
                   const _SectionLabel(label: 'Screenshots & Videos'),
                   const SizedBox(height: 16),
-                  _MediaCarousel(items: mediaItems, isMobile: true),
+                  _MediaCarousel(
+                    items: widget.mediaItems,
+                    isMobile: true,
+                    isScrolling: _isScrolling,
+                  ),
                 ],
                 SizedBox(height: screenHeight * 0.04),
               ] else ...[
@@ -164,18 +209,22 @@ class ProjectDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _HeroSection(
-                            title: title,
-                            subtitle: subtitle,
-                            role: role,
-                            liveUrl: liveUrl,
-                            githubUrl: githubUrl,
+                            title: widget.title,
+                            subtitle: widget.subtitle,
+                            role: widget.role,
+                            liveUrl: widget.liveUrl,
+                            githubUrl: widget.githubUrl,
                             isMobile: false,
                           ),
-                          if (mediaItems.isNotEmpty) ...[
+                          if (widget.mediaItems.isNotEmpty) ...[
                             SizedBox(height: screenHeight * 0.04),
                             const _SectionLabel(label: 'Screenshots & Videos'),
                             const SizedBox(height: 16),
-                            _MediaCarousel(items: mediaItems, isMobile: false),
+                            _MediaCarousel(
+                              items: widget.mediaItems,
+                              isMobile: false,
+                              isScrolling: _isScrolling,
+                            ),
                           ],
                         ],
                       ),
@@ -184,10 +233,10 @@ class ProjectDetailPage extends StatelessWidget {
                     // Right: tech stack
                     Expanded(
                       flex: 2,
-                      child: techStack.isNotEmpty
-                          ? _TechStackCard(techStack: techStack)
-                          : tags.isNotEmpty
-                          ? _TagsCard(tags: tags)
+                      child: widget.techStack.isNotEmpty
+                          ? _TechStackCard(techStack: widget.techStack)
+                          : widget.tags.isNotEmpty
+                          ? _TagsCard(tags: widget.tags)
                           : const SizedBox.shrink(),
                     ),
                   ],
@@ -200,7 +249,7 @@ class ProjectDetailPage extends StatelessWidget {
               const SizedBox(height: 16),
               _GlassCard(
                 child: Text(
-                  description,
+                  widget.description,
                   style: GoogleFonts.inter(
                     fontSize: isMobile ? 15 : 17,
                     fontWeight: FontWeight.w400,
@@ -211,49 +260,49 @@ class ProjectDetailPage extends StatelessWidget {
               ),
 
               // ── Tech Stack (mobile only — desktop shows in hero row) ─
-              if (isMobile && techStack.isNotEmpty) ...[
+              if (isMobile && widget.techStack.isNotEmpty) ...[
                 SizedBox(height: screenHeight * 0.04),
                 const _SectionLabel(label: 'Tech Stack'),
                 const SizedBox(height: 16),
-                _TechStackCard(techStack: techStack),
-              ] else if (isMobile && tags.isNotEmpty) ...[
+                _TechStackCard(techStack: widget.techStack),
+              ] else if (isMobile && widget.tags.isNotEmpty) ...[
                 SizedBox(height: screenHeight * 0.04),
                 const _SectionLabel(label: 'Tech Stack'),
                 const SizedBox(height: 16),
-                _TagsCard(tags: tags),
+                _TagsCard(tags: widget.tags),
               ],
 
               // ── Key Features ─────────────────────────────────────────
-              if (keyFeatures.isNotEmpty) ...[
+              if (widget.keyFeatures.isNotEmpty) ...[
                 SizedBox(height: screenHeight * 0.04),
                 const _SectionLabel(label: 'Key Features'),
                 const SizedBox(height: 16),
                 _GlassCard(
                   child: _TwoColumnBulletList(
-                    items: keyFeatures,
+                    items: widget.keyFeatures,
                     isMobile: isMobile,
                   ),
                 ),
               ],
 
               // ── My Role ──────────────────────────────────────────────
-              if (myRole.isNotEmpty) ...[
+              if (widget.myRole.isNotEmpty) ...[
                 SizedBox(height: screenHeight * 0.04),
                 const _SectionLabel(label: 'My Role'),
                 const SizedBox(height: 16),
                 _GlassCard(
-                  child: _BulletList(items: myRole, isMobile: isMobile),
+                  child: _BulletList(items: widget.myRole, isMobile: isMobile),
                 ),
               ],
 
               // ── Key Contributions ────────────────────────────────────
-              if (keyContributions.isNotEmpty) ...[
+              if (widget.keyContributions.isNotEmpty) ...[
                 SizedBox(height: screenHeight * 0.04),
                 const _SectionLabel(label: 'Key Contributions'),
                 const SizedBox(height: 16),
                 _GlassCard(
                   child: _BulletList(
-                    items: keyContributions,
+                    items: widget.keyContributions,
                     isMobile: isMobile,
                     accentBullet: true,
                   ),
@@ -261,7 +310,7 @@ class ProjectDetailPage extends StatelessWidget {
               ],
 
               // ── Skills Demonstrated ──────────────────────────────────
-              if (skillsDemonstrated.isNotEmpty) ...[
+              if (widget.skillsDemonstrated.isNotEmpty) ...[
                 SizedBox(height: screenHeight * 0.04),
                 const _SectionLabel(label: 'Skills Demonstrated'),
                 const SizedBox(height: 16),
@@ -269,7 +318,7 @@ class ProjectDetailPage extends StatelessWidget {
                   child: Wrap(
                     spacing: 10,
                     runSpacing: 10,
-                    children: skillsDemonstrated
+                    children: widget.skillsDemonstrated
                         .map((s) => _SkillPill(label: s))
                         .toList(),
                   ),
@@ -290,7 +339,12 @@ class ProjectDetailPage extends StatelessWidget {
 class _MediaCarousel extends StatefulWidget {
   final List<ProjectMediaItem> items;
   final bool isMobile;
-  const _MediaCarousel({required this.items, required this.isMobile});
+  final ValueNotifier<bool> isScrolling;
+  const _MediaCarousel({
+    required this.items,
+    required this.isMobile,
+    required this.isScrolling,
+  });
 
   @override
   State<_MediaCarousel> createState() => _MediaCarouselState();
@@ -315,12 +369,32 @@ class _MediaCarouselState extends State<_MediaCarousel> {
       final item = widget.items[i];
       return item.type == MediaType.video ? 'vid-$ts-$i' : null;
     });
+
+    // Hide all videos while the page is scrolling to prevent DOM bleed.
+    if (kIsWeb) {
+      widget.isScrolling.addListener(_onScrollingChanged);
+    }
+  }
+
+  void _onScrollingChanged() {
+    if (!kIsWeb) return;
+    if (widget.isScrolling.value) {
+      // Scrolling started — hide all videos immediately.
+      for (final id in _controlIds) {
+        if (id != null) pauseAndHideVideo(id);
+      }
+    } else {
+      // Scrolling stopped — restore the active video.
+      final activeId = _controlIds[_currentIndex];
+      if (activeId != null) showVideo(activeId);
+    }
   }
 
   @override
   void dispose() {
     // Pause all videos when the carousel is disposed.
     if (kIsWeb) {
+      widget.isScrolling.removeListener(_onScrollingChanged);
       for (final id in _controlIds) {
         if (id != null) pauseAndHideVideo(id);
       }

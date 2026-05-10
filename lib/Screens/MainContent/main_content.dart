@@ -110,7 +110,10 @@ class _MainContentState extends State<MainContent> {
                           screenHeight,
                         ),
                       ),
-                      _constrainedBox(const Project(), screenHeight),
+                      _constrainedBox(
+                        const Project(),
+                        isMobileScreen ? screenHeight * .75 : screenHeight,
+                      ),
                       GlassContainer(
                         width: screenWidth,
                         child: _constrainedBox(const Education(), screenHeight),

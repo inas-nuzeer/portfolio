@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-// dart fix: ensure app_constants is imported
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:inas_portfolio/Utils/app_constants.dart';

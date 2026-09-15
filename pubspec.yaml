@@ -81,6 +81,17 @@ flutter:
   assets:
     - assets/logos/
     - assets/projects/xplorit/xplorit.mp4
+    - assets/projects/v2-pos-system/POS Terminal.png
+    - assets/projects/v2-pos-system/Dashboard.png
+    - assets/projects/v2-pos-system/Products Inventory.png
+    - assets/projects/v2-pos-system/Sales Report.png
+    - assets/projects/v2-pos-system/Profit Margin.png
+    - assets/projects/v2-pos-system/Customers and Credit Details.png
+    - assets/projects/v2-pos-system/Customer Credit Statement.png
+    - assets/projects/v2-pos-system/Credit Payables.png
+    - assets/projects/v2-pos-system/Supplier Credit Statement.png
+    - assets/projects/v2-pos-system/Inventory Valuation.png
+    - assets/projects/v2-pos-system/Backup Setting.png
     - assets/projects/anrbaby.png
     - assets/projects/oneaccess.png
     - assets/projects/portfolio.png

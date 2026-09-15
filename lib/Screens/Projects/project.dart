@@ -241,6 +241,147 @@ const List<_ProjectData> _projects = [
   // ── Web ──────────────────────────────────────────────────────────────────────
   _ProjectData(
     category: ProjectCategory.web,
+    title: 'V2 Soft POS',
+    subtitle:
+        'Retail & Electronics POS, Used Device Buyback, and Inventory ERP Platform',
+    role: 'Lead Full-Stack Developer',
+    description:
+        'V2 Soft POS is an enterprise-grade Point of Sale, inventory management, '
+        'and business operations ERP engineered specifically for electronics retail '
+        'and phone repair/refurbishment shops. It unifies rapid barcode/keyboard-driven '
+        'counter checkouts, device repair spot costing, walk-in customer trade-ins with '
+        'IMEI lifecycle tracking, and complex accounts payable/receivable ledgers. Built '
+        'with a resilient local-first architecture for Windows/XAMPP environments and '
+        'cloud servers alike, the system eliminates POS downtime while offering automated '
+        'Google Drive cloud backups, ESC/POS thermal printing, and audit-ready financial, '
+        'tax, and Zakat reporting.',
+    tags: [
+      'Laravel 12',
+      'PHP 8.2+',
+      'Livewire 3',
+      'Alpine.js',
+      'Tailwind CSS v4',
+      'MySQL',
+      'PWA',
+      'ESC/POS',
+      'Google Drive API',
+      'Web',
+    ],
+    githubUrl: 'https://github.com/inas-nuzeer/pos-system',
+    mediaItems: [
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/POS Terminal.png',
+        caption: 'POS Terminal',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Dashboard.png',
+        caption: 'Dashboard',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Products Inventory.png',
+        caption: 'Products Inventory',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Sales Report.png',
+        caption: 'Sales Report',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Profit Margin.png',
+        caption: 'Profit Margin',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Customers and Credit Details.png',
+        caption: 'Customers & Credit Details',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Customer Credit Statement.png',
+        caption: 'Customer Credit Statement',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Credit Payables.png',
+        caption: 'Credit Payables',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Supplier Credit Statement.png',
+        caption: 'Supplier Credit Statement',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Inventory Valuation.png',
+        caption: 'Inventory Valuation',
+      ),
+      ProjectMediaItem.image(
+        'assets/projects/v2-pos-system/Backup Setting.png',
+        caption: 'Backup Settings',
+      ),
+    ],
+    techStack: {
+      'Backend & Framework': [
+        'PHP 8.2+ / Laravel 12 (Service Architecture, DTOs, Observers, Policies)',
+        'Laravel Livewire 3 (Reactive full-page component architecture)',
+        'Spatie Activitylog 4.0 (Enterprise audit trail & change tracking)',
+        'Barryvdh Laravel DomPDF 3.1 (PDF generation for invoices & tax reports)',
+      ],
+      'Frontend': [
+        'Tailwind CSS v4 (Light/Dark theme switching)',
+        'Alpine.js 3 (Client-side interactivity & stores)',
+        'Vite 7 & Laravel Vite Plugin 2.0 (Asset bundling)',
+        'Custom Vanilla JS (Keyboard shortcut system, focus navigation, BFCache guards)',
+        'Progressive Web App (Service Worker, installable desktop app)',
+      ],
+      'Hardware & Printing': [
+        'ESC/POS Receipt Printing (direct USB/Serial/Network thermal printer)',
+        'Barcode Generation (EAN-13 / Code-128 shelf label printing)',
+      ],
+      'Database & Cloud': [
+        'MySQL 8.0 / SQLite',
+        'Google Drive API (google/apiclient 2.15, automated cloud backups)',
+      ],
+      'Testing & Tooling': [
+        'PHPUnit 11 (44+ assertions: RBAC, POS, Buyback flows)',
+        'Vitest & JSDOM (JavaScript unit testing)',
+      ],
+    },
+    keyFeatures: [
+      'High-speed POS terminal with barcode scanner auto-focus, split payments, bill hold/retrieve, and instant thermal printing',
+      'Used phone buyback & refurbishment module with seller KYC, IMEI tracking, and lifecycle workflow (in_stock → under_refurb → listed → sold)',
+      'Shift management & cash reconciliation — opening/closing registers, petty cash tracking, and drawer count verification',
+      'Batch-based inventory & accounts payable with FIFO/weighted cost tracking, supplier purchase orders, and credit terms',
+      'Customer accounts & credit management — wholesale/retail pricing, store credit, credit limits, and PDF account statements',
+      'Repair & spot purchase cost tracking for accurate net profit calculations',
+      'Comprehensive financial & compliance reporting — Gross/Net Profit, Staff performance, Inventory Valuation, Tax (VAT/GST), and Islamic Zakat engine',
+      'Granular RBAC with 4 roles (Owner, Manager, Cashier, Inventory Staff) gating margins, cost prices, discounts, and settings',
+      'Keyboard-first ergonomics with F1–F12 function key mappings for entire POS navigation and checkout flows',
+      'PWA & local-first reliability with automated Google Drive backups and session CSRF synchronization',
+      'Barcode label printing for shelf tags (EAN-13 / Code-128)',
+      'Automated dual-target backup system — compressed local storage and Google Drive via Flysystem',
+    ],
+    myRole: [
+      'Led full-stack architecture and development — solely responsible for database modeling, business logic, UI, hardware driver integration, and deployment automation',
+      'Designed complex accounting and inventory workflows including multi-tiered debt ledgers, FIFO stock batching, device trade-in lifecycle states, and cash drawer reconciliations',
+      'Built the reactive, keyboard-accessible UI with Livewire 3, Alpine.js, and Tailwind CSS v4, including dark/light mode and desktop PWA installation',
+      'Authored comprehensive PHPUnit feature test suites covering RBAC boundaries, financial transactions, wallet balances, and stock transitions',
+    ],
+    keyContributions: [
+      'Engineered the complete used device buyback engine (BuybackService, BuybackTransaction, UsedPhoneStock) — customer KYC intake, image uploads, IMEI binding, refurbishment tracking, and multi-channel payouts',
+      'Implemented ESC/POS thermal printing pipeline (app/Printing/) — driver-agnostic hardware layer with custom receipt templating, logo rendering, and cash drawer kick pulses',
+      'Architected resilient offline & session management — custom BFCache/SPA CSRF guards, graceful 419/401 auth redirects, and network error handling during Livewire interactions',
+      'Developed automated dual-target backup system — custom Artisan commands (RunScheduledBackup, RunLocalBackup, BackupMonitor) streaming mysqldump to local storage and Google Drive',
+      'Built Islamic Zakat & multi-category profit engine — ZakatService and ReportService dynamically factor cash, inventory valuation, deductible liabilities, and custom Nisab values',
+      'Optimized high-speed form & barcode UX — Alpine.js mixins (formNav, keyboard-shortcuts.js) enabling full checkout via barcode scanner and F1–F12 keyboard navigation',
+      'Designed normalized relational database schema covering inventory batches, double-entry-style AP/AR balance tracking, and immutable activity logging',
+    ],
+    skillsDemonstrated: [
+      'Modern full-stack Laravel architecture (Laravel 12, Livewire 3, service layers, DTOs, event-driven design)',
+      'Complex relational database design (inventory batches, AP/AR ledgers, immutable audit logs)',
+      'Hardware & peripheral integration (ESC/POS thermal printers, barcode label printers, USB scanners)',
+      'Security & RBAC (zero-trust authorization gates across UI, controllers, and PDF exports)',
+      'Performance & keyboard accessibility (reactive state, DOM focus trapping, F-key shortcut systems)',
+      'Financial & ERP accounting logic (inventory valuation, gross/net margins, AP/AR, cash reconciliation)',
+      'Islamic finance compliance (Zakat calculation engine with Nisab threshold management)',
+    ],
+  ),
+  _ProjectData(
+    category: ProjectCategory.web,
     title: 'Portfolio App',
     subtitle: 'Personal Portfolio built with Flutter Web',
     role: 'Flutter Developer',

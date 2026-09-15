@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
                   FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          'Software Developer · Flutter | Laravel',
+                          kHeroSubtitle,
                           style: const TextStyle(
                             color: Color(0xFFfeb800),
                             fontWeight: FontWeight.bold,

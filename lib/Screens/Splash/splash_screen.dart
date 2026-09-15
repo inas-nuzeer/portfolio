@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   // Typewriter state
   final String _fullName = 'Inas Nuzeer';
-  final String _subtitle = 'Software Engineer  ·  Flutter | Laravel Developer';
+  final String _subtitle = kSplashSubtitle;
   String _displayedName = '';
   String _displayedSubtitle = '';
   bool _showCursor = true;

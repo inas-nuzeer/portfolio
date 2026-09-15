@@ -7,7 +7,7 @@ import 'cv_downloader_web.dart' if (dart.library.io) 'cv_downloader_io.dart';
 Future<void> downloadCv() async {
   const String assetPath = 'assets/files/Inas-Nuzeer-CV-Updated.pdf';
   // const String assetPath = 'assets/files/Inas-Nuzeer-Cv.pdf';
-  const String fileName = 'Inas-Nuzeer-Cv.pdf';
+  const String fileName = 'Inas-Nuzeer-CV-Updated.pdf';
 
   try {
     final ByteData data = await rootBundle.load(assetPath);

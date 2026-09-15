@@ -1,10 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
+// dart fix: ensure app_constants is imported
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inas_portfolio/Screens/MainContent/main_content.dart';
+import 'package:inas_portfolio/Utils/app_constants.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
